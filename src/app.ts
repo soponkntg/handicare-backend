@@ -7,8 +7,8 @@ dotenv.config();
 const app = express();
 
 sequelize
-  // .sync({force:true})
-  .sync()
+  .sync({ force: true })
+  // .sync()
   .then((result: any) => {
     console.log(result);
     const port = process.env.PORT || 3000;
