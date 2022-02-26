@@ -8,11 +8,11 @@ const Location = sequelize.define("location", {
     allowNull: false,
     primaryKey: true,
   },
-  locationName: {
+  name: {
     type: Sequelize.STRING,
     allowNull: false,
   },
-  locationCategory: {
+  category: {
     type: Sequelize.STRING,
     allowNull: false,
   },
@@ -37,24 +37,12 @@ const Location = sequelize.define("location", {
     defaultValue: 0,
   },
   rateAverage: {
-    type: Sequelize.INTEGER,
-    allowNull: false,
+    type: Sequelize.DOUBLE,
+    defaultValue: 0,
   },
-  openTime: {
-    type: Sequelize.TIME,
-    allowNull: false,
-  },
-  closeTime: {
-    type: Sequelize.TIME,
-    allowNull: false,
-  },
-  openDate: {
+  imageURL: {
     type: Sequelize.STRING,
-    allowNull: false,
-  },
-  locationImage: {
-    type: Sequelize.STRING,
-    allowNUll: false,
+    // allowNull: false,
   },
 });
 
