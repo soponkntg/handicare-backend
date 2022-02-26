@@ -1,10 +1,14 @@
 import express from "express";
 import dotenv from "dotenv";
+
+dotenv.config();
+const app = express();
+
 import sequelize from "./database";
 import Location from "./models/location";
 import Ramp from "./models/ramp";
 import Toilet from "./models/toilet";
-import Lift from "./models/lift";
+import Elevator from "./models/elevator";
 import Parking from "./models/parking";
 import Door from "./models/door";
 import Image from "./models/image";
@@ -13,12 +17,9 @@ import LocationResteraunt from "./models/locationRestaurnat";
 import { storeData } from "./upload/upload";
 import Open from "./models/open";
 
-dotenv.config();
-const app = express();
-
 Location.hasMany(Ramp);
 Location.hasMany(Toilet);
-Location.hasMany(Lift);
+Location.hasMany(Elevator);
 Location.hasMany(Parking);
 Location.hasMany(Door);
 Location.hasMany(Image);
@@ -27,7 +28,7 @@ Location.belongsToMany(Resteraunt, { through: LocationResteraunt });
 Resteraunt.belongsToMany(Location, { through: LocationResteraunt });
 Ramp.belongsTo(Location, { constraints: true, onDelte: "CASCADE" });
 Toilet.belongsTo(Location, { constraints: true, onDelte: "CASCADE" });
-Lift.belongsTo(Location, { constraints: true, onDelte: "CASCADE" });
+Elevator.belongsTo(Location, { constraints: true, onDelte: "CASCADE" });
 Parking.belongsTo(Location, { constraints: true, onDelte: "CASCADE" });
 Door.belongsTo(Location, { constraints: true, onDelte: "CASCADE" });
 Image.belongsTo(Location, { constraints: true, onDelte: "CASCADE" });
