@@ -5,8 +5,8 @@ import Elevator from "./elevator";
 import Parking from "./parking";
 import Door from "./door";
 import Image from "./image";
-import Resteraunt from "./restaurant";
-import LocationResteraunt from "./locationRestaurnat";
+import Restaurant from "./restaurant";
+import LocationRestaurant from "./locationRestaurant";
 import Open from "./open";
 import sequelize from "../database";
 import { storeData } from "../upload/upload";
@@ -19,8 +19,8 @@ export {
   Parking,
   Door,
   Image,
-  Resteraunt,
-  LocationResteraunt,
+  Restaurant,
+  LocationRestaurant,
 };
 Location.hasMany(Ramp);
 Location.hasMany(Toilet);
@@ -29,8 +29,8 @@ Location.hasMany(Parking);
 Location.hasMany(Door);
 Location.hasMany(Image);
 Location.hasMany(Open);
-Location.belongsToMany(Resteraunt, { through: LocationResteraunt });
-Resteraunt.belongsToMany(Location, { through: LocationResteraunt });
+Location.belongsToMany(Restaurant, { through: LocationRestaurant });
+Restaurant.belongsToMany(Location, { through: LocationRestaurant });
 Ramp.belongsTo(Location, { constraints: true, onDelete: "CASCADE" });
 Toilet.belongsTo(Location, { constraints: true, onDelete: "CASCADE" });
 Elevator.belongsTo(Location, { constraints: true, onDelete: "CASCADE" });

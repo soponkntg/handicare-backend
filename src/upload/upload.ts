@@ -1,10 +1,9 @@
 import fs from "fs";
 import csv from "csv-parser";
 import path from "path";
-import Location from "../models/location";
-import Resteraunt from "../models/restaurant";
+import { Location, Restaurant, LocationRestaurant } from "../models/index";
 const locationData: any = [];
-const locationResterauntData: any = [];
+const locationRestaurantData: any = [];
 const toiletData: any = [];
 const liftData: any = [];
 const parkingData: any = [];
@@ -32,10 +31,10 @@ export const storeData = async () => {
       const locations = await Location.bulkCreate(locationData);
       console.log(locations);
 
-      fs.createReadStream(path.join(__dirname, "location_resteraunt.csv"))
+      fs.createReadStream(path.join(__dirname, "location_restaurant.csv"))
         .pipe(csv())
         .on("data", async (row) => {
-          ////read locationResteraunt file
+          ////read locationRestaurant file
 
           const data = {
             locationName: row["Location_Name"],
@@ -46,7 +45,7 @@ export const storeData = async () => {
             floor: row["Floor"],
             logoURL: row["URL"],
           };
-          locationResterauntData.push(data);
+          locationRestaurantData.push(data);
         })
         // .on("end", async () => {
         //   fs.createReadStream("toilet.csv")
@@ -119,24 +118,40 @@ export const storeData = async () => {
         //                 rampData.push(data);
         //               })
         .on("end", async () => {
-          console.log(locationResterauntData);
-          for (let locationResteraunt of locationResterauntData) {
+          console.log(locationRestaurantData);
+          for (let locationRestaurant of locationRestaurantData) {
             const location = await Location.findOne({
               where: {
-                name: locationResteraunt.locationName,
+                name: locationRestaurant.locationName,
               },
             });
             if (location) {
-              let resteraunt = await Resteraunt.findAll({
-                where: { name: locationResteraunt.name },
+              let restaurant = await Restaurant.findOne({
+                where: { name: locationRestaurant.name },
               });
-              if (!resteraunt) {
-                resteraunt = await Resteraunt.create({
-                  name: locationResteraunt.name,
-                  category: locationResteraunt.category,
-                  // logoURL: locationResteraunt.logoURL
+              if (!restaurant) {
+                restaurant = await Restaurant.create({
+                  name: locationRestaurant.name,
+                  category: locationRestaurant.category,
+                  // logoURL: locationRestaurant.logoURL
                 });
               }
+              location.addRestaurant();
+              // const resterauntInLocation = await LocationRestaurant.create({
+              //   locationId: location.toJSON().id,
+              //   restaurantId: restaurant.toJSON().id,
+              //   located: locationRestaurant.located,
+              //   floor: locationRestaurant.floor,
+              //   count: locationRestaurant.count,
+              //   level: locationRestaurant.level,
+              //   // imageURL:locationRestaurant.imageURL,
+              // });
+              // console.log(resterauntInLocation);
+              // const l = await Location.findOne({
+              //   where: {
+              //     name: locationRestaurant.locationName,
+              //   },
+              // });
             }
           }
         });

@@ -1,7 +1,7 @@
 import Sequelize from "sequelize";
 import sequelize from "../database";
 
-const LocationResteraunt = sequelize.define("location_resteraunt", {
+const LocationRestaurant = sequelize.define("location_restaurant", {
   located: {
     type: Sequelize.STRING,
     allowNull: false,
@@ -12,7 +12,7 @@ const LocationResteraunt = sequelize.define("location_resteraunt", {
   },
   count: {
     type: Sequelize.INTEGER,
-    allowNull: false,
+    defaultValue: 0,
   },
   level: {
     type: Sequelize.STRING,
@@ -24,4 +24,4 @@ const LocationResteraunt = sequelize.define("location_resteraunt", {
   },
 });
 
-export default LocationResteraunt;
+export default LocationRestaurant;
