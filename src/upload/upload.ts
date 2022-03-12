@@ -3,7 +3,6 @@ import csv from "csv-parser";
 import path from "path";
 import Location from "../models/location";
 import Resteraunt from "../models/restaurant";
-
 const locationData: any = [];
 const locationResterauntData: any = [];
 const toiletData: any = [];
@@ -128,7 +127,7 @@ export const storeData = async () => {
               },
             });
             if (location) {
-              let resteraunt = await Resteraunt.findOne({
+              let resteraunt = await Resteraunt.findAll({
                 where: { name: locationResteraunt.name },
               });
               if (!resteraunt) {
