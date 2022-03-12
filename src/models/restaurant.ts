@@ -18,7 +18,7 @@ const Resteraunt = sequelize.define("resteraunt", {
   },
   logoURL: {
     type: Sequelize.STRING,
-    allowNull: false,
+    // allowNull: false,
   },
 });
 
