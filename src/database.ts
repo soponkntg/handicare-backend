@@ -1,4 +1,6 @@
-// const { Sequelize } = require("sequelize");
+import dotenv from "dotenv";
+dotenv.config();
+
 import { Sequelize } from "sequelize";
 const dbName = process.env.DB_NAME as string;
 const dbUser = process.env.DB_USER as string;
