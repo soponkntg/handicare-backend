@@ -1,7 +1,7 @@
 import Sequelize from "sequelize";
 import sequelize from "../database";
 
-const Resteraunt = sequelize.define("resteraunt", {
+const Restaurant = sequelize.define("restaurant", {
   id: {
     type: Sequelize.INTEGER,
     autoIncrement: true,
@@ -22,4 +22,4 @@ const Resteraunt = sequelize.define("resteraunt", {
   },
 });
 
-export default Resteraunt;
+export default Restaurant;
