@@ -1,49 +1,72 @@
-import Sequelize from "sequelize";
+import { Model, DataTypes } from "sequelize";
 import sequelize from "../database";
 
-const Location = sequelize.define("location", {
-  id: {
-    type: Sequelize.INTEGER,
-    autoIncrement: true,
-    allowNull: false,
-    primaryKey: true,
+class Location extends Model {
+  declare id: number;
+  declare name: string;
+  declare category: string;
+  declare googleMap: string;
+  declare locationDetail: string;
+  declare lat: string;
+  declare lng: string;
+  declare count: number;
+  declare rateAverage: number;
+  declare imageURL: string;
+  declare remark: string;
+}
+
+Location.init(
+  {
+    id: {
+      type: DataTypes.INTEGER,
+      autoIncrement: true,
+      allowNull: false,
+      primaryKey: true,
+    },
+    name: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    category: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    googleMap: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    locationDetail: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    lat: {
+      type: DataTypes.DOUBLE,
+      allowNull: false,
+    },
+    lng: {
+      type: DataTypes.DOUBLE,
+      allowNull: false,
+    },
+    count: {
+      type: DataTypes.INTEGER,
+      defaultValue: 0,
+    },
+    rateAverage: {
+      type: DataTypes.DOUBLE,
+      defaultValue: 0,
+    },
+    imageURL: {
+      type: DataTypes.STRING,
+      // allowNull: false,
+    },
+    remark: {
+      type: DataTypes.STRING,
+    },
   },
-  name: {
-    type: Sequelize.STRING,
-    allowNull: false,
-  },
-  category: {
-    type: Sequelize.STRING,
-    allowNull: false,
-  },
-  googleMap: {
-    type: Sequelize.STRING,
-    allowNull: false,
-  },
-  locationDetail: {
-    type: Sequelize.STRING,
-    allowNull: false,
-  },
-  lat: {
-    type: Sequelize.DOUBLE,
-    allowNull: false,
-  },
-  lng: {
-    type: Sequelize.DOUBLE,
-    allowNull: false,
-  },
-  count: {
-    type: Sequelize.INTEGER,
-    defaultValue: 0,
-  },
-  rateAverage: {
-    type: Sequelize.DOUBLE,
-    defaultValue: 0,
-  },
-  imageURL: {
-    type: Sequelize.STRING,
-    // allowNull: false,
-  },
-});
+  {
+    sequelize,
+    tableName: "location",
+  }
+);
 
 export default Location;

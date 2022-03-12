@@ -26,13 +26,13 @@ Location.hasMany(Image);
 Location.hasMany(Open);
 Location.belongsToMany(Resteraunt, { through: LocationResteraunt });
 Resteraunt.belongsToMany(Location, { through: LocationResteraunt });
-Ramp.belongsTo(Location, { constraints: true, onDelte: "CASCADE" });
-Toilet.belongsTo(Location, { constraints: true, onDelte: "CASCADE" });
-Elevator.belongsTo(Location, { constraints: true, onDelte: "CASCADE" });
-Parking.belongsTo(Location, { constraints: true, onDelte: "CASCADE" });
-Door.belongsTo(Location, { constraints: true, onDelte: "CASCADE" });
-Image.belongsTo(Location, { constraints: true, onDelte: "CASCADE" });
-Open.belongsTo(Location, { constraints: true, onDelte: "CASCADE" });
+Ramp.belongsTo(Location, { constraints: true, onDelete: "CASCADE" });
+Toilet.belongsTo(Location, { constraints: true, onDelete: "CASCADE" });
+Elevator.belongsTo(Location, { constraints: true, onDelete: "CASCADE" });
+Parking.belongsTo(Location, { constraints: true, onDelete: "CASCADE" });
+Door.belongsTo(Location, { constraints: true, onDelete: "CASCADE" });
+Image.belongsTo(Location, { constraints: true, onDelete: "CASCADE" });
+Open.belongsTo(Location, { constraints: true, onDelete: "CASCADE" });
 
 sequelize
   .sync({ force: true })
