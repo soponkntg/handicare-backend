@@ -1,13 +1,25 @@
 import fs from "fs";
 import csv from "csv-parser";
 import path from "path";
-import { Location, Restaurant, LocationRestaurant } from "../models/index";
-const locationData: any = [];
-const locationRestaurantData: any = [];
-const toiletData: any = [];
-const liftData: any = [];
-const parkingData: any = [];
-const rampData: any = [];
+import {
+  Location,
+  Restaurant,
+  LocationRestaurant,
+  Open,
+  Door,
+  Toilet,
+  Elevator,
+  Parking,
+  Ramp,
+} from "../models/index";
+const locationsData: any = [];
+const opensData: any = [];
+const locationRestaurantsData: any = [];
+const doorsData: any = [];
+const toiletsData: any = [];
+const elevatorsData: any = [];
+const parkingsData: any = [];
+const rampsData: any = [];
 
 export const storeData = async () => {
   fs.createReadStream(path.join(__dirname, "location.csv"))
@@ -22,19 +34,13 @@ export const storeData = async () => {
         locationDetail: row["Location Detail"],
         remark: row["Remarks"],
       };
-      locationData.push(data);
+      locationsData.push(data);
     })
     .on("end", async () => {
-      console.log(locationData);
-
-      //insert to location table
-      const locations = await Location.bulkCreate(locationData);
-      console.log(locations);
-
       fs.createReadStream(path.join(__dirname, "location_restaurant.csv"))
         .pipe(csv())
         .on("data", async (row) => {
-          ////read locationRestaurant file
+          //read locationRestaurant file
 
           const data = {
             locationName: row["Location_Name"],
@@ -43,121 +49,319 @@ export const storeData = async () => {
             level: +row["Level"],
             located: row["Located"],
             floor: row["Floor"],
-            logoURL: row["URL"],
+            logoURL: row["Logo URL"],
+            remark: row["Remark"],
           };
-          locationRestaurantData.push(data);
+          locationRestaurantsData.push(data);
         })
-        // .on("end", async () => {
-        //   fs.createReadStream("toilet.csv")
-        //     .pipe(csv())
-        //     .on("data", (row) => {
-        //       // read toilet table
-
-        //       const data = {
-        //         locationName: row["Location_Name"],
-        //         type: row["Type"],
-        //         doorType: row["Door Type"],
-        //         handrail: row["Handrail"],
-        //         located: row["Located"],
-        //         floor: row["Floor"],
-        //         remark: row["Remark"],
-        //       };
-        //       toiletData.push(data);
-        //     })
-        //   .on("end", () => {
-        //     fs.createReadStream("lift.csv")
-        //       .pipe(csv())
-        //       .on("data", (row) => {
-
-        //// read lift table
-
-        //         const data = {
-        //           locationName: row["Location_Name"],
-        //           switch: row["Type"],
-        //           doorType: row["Wheel Chair Switch"],
-        //           passable: row["Passable"],
-        //           located: row["Located"],
-        //           floor: row["Floor"],
-        //           remark: row["Remark"],
-        //         };
-        //         liftData.push(data);
-        //       })
-        //       .on("end", () => {
-        //         fs.createReadStream("parking.csv")
-        //           .pipe(csv())
-        //           .on("data", (row) => {
-
-        //// read parking table
-
-        //             const data = {
-        //               locationName: row["Location_Name"],
-        //               enoughSpace: row["Enough Space"],
-        //               nearEntry: row["Near Entry"],
-        //               located: row["Located"],
-        //               floor: row["Floor"],
-        //               remark: row["Remark"],
-        //             };
-        //             parkingData.push(data);
-        //           })
-        //           .on("end", () => {
-        //             fs.createReadStream("ramp.csv")
-        //               .pipe(csv())
-        //               .on("data", (row) => {
-
-        //// read ramp table
-
-        //                 const data = {
-        //                   locationName: row["Location_Name"],
-        //                   slope: row["Slope"],
-        //                   level: +row["Level"],
-        //                   handrail: row["Handrail"],
-        //                   located: row["Located"],
-        //                   floor: row["Floor"],
-        //                   remark: row["Remark"],
-        //                 };
-        //                 rampData.push(data);
-        //               })
         .on("end", async () => {
-          console.log(locationRestaurantData);
-          for (let locationRestaurant of locationRestaurantData) {
-            const location = await Location.findOne({
-              where: {
-                name: locationRestaurant.locationName,
-              },
-            });
-            if (location) {
-              let restaurant = await Restaurant.findOne({
-                where: { name: locationRestaurant.name },
-              });
-              if (!restaurant) {
-                restaurant = await Restaurant.create({
-                  name: locationRestaurant.name,
-                  category: locationRestaurant.category,
-                  // logoURL: locationRestaurant.logoURL
+          fs.createReadStream(path.join(__dirname, "ramp.csv"))
+            .pipe(csv())
+            .on("data", async (row) => {
+              // read open file
+
+              const data = {
+                locationName: row["Location_Name"],
+                day: row["Day"],
+                open: toBoolean(row["Open"]),
+                openTime: row["Open Time"],
+                closeTime: row["Close Time"],
+              };
+              opensData.push(data);
+            })
+            .on("end", async () => {
+              fs.createReadStream(path.join(__dirname, "ramp.csv"))
+                .pipe(csv())
+                .on("data", async (row) => {
+                  // read ramp file
+
+                  const data = {
+                    locationName: row["Location_Name"],
+                    slope: row["Slope"],
+                    level: +row["Level"],
+                    handrail: toBoolean(row["Handrail"]),
+                    located: row["Located"],
+                    floor: row["Floor"],
+                    remark: row["Remark"],
+                  };
+                  rampsData.push(data);
+                })
+                .on("end", async () => {
+                  fs.createReadStream(path.join(__dirname, "door.csv"))
+                    .pipe(csv())
+                    .on("data", async (row) => {
+                      // read door file
+
+                      const data = {
+                        locationName: row["Location_Name"],
+                        doorType: row["Door Type"],
+                        passable: toBoolean(row["Passable"]),
+                        located: row["Located"],
+                        floor: row["Floor"],
+                        remark: row["Remark"],
+                      };
+                      doorsData.push(data);
+                    })
+                    .on("end", async () => {
+                      fs.createReadStream(path.join(__dirname, "toilet.csv"))
+                        .pipe(csv())
+                        .on("data", async (row) => {
+                          // read toilet file
+
+                          const data = {
+                            locationName: row["Location_Name"],
+                            type: row["Type"],
+                            doorType: row["Door Type"],
+                            handrail: toBoolean(row["Handrail"]),
+                            located: row["Located"],
+                            floor: row["Floor"],
+                            remark: row["Remark"],
+                          };
+                          toiletsData.push(data);
+                        })
+                        .on("end", async () => {
+                          fs.createReadStream(
+                            path.join(__dirname, "elevator.csv")
+                          )
+                            .pipe(csv())
+                            .on("data", async (row) => {
+                              // read elevator file
+
+                              const data = {
+                                locationName: row["Location_Name"],
+                                switch: row["Wheel Chair Switch"],
+                                passable: toBoolean(row["Passable"]),
+                                located: row["Located"],
+                                floor: row["Floor"],
+                                remark: row["Remark"],
+                              };
+                              elevatorsData.push(data);
+                            })
+                            .on("end", async () => {
+                              fs.createReadStream(
+                                path.join(__dirname, "elevator.csv")
+                              )
+                                .pipe(csv())
+                                .on("data", async (row) => {
+                                  // read parking file
+
+                                  const data = {
+                                    locationName: row["Location_Name"],
+                                    enoughSpace: toBoolean(row["Enough Space"]),
+                                    nearEntry: toBoolean(row["Near Entry"]),
+                                    located: row["Located"],
+                                    floor: row["Floor"],
+                                    remark: row["Remark"],
+                                  };
+                                  parkingsData.push(data);
+                                })
+                                .on("end", async () => {
+                                  //insert to location table with others
+
+                                  for (let locationData of locationsData) {
+                                    //open
+                                    const opensInLocation = opensData.filter(
+                                      (open: any) =>
+                                        open.locationName === locationData.name
+                                    );
+                                    const opens = opensInLocation.map(
+                                      (open: any) => {
+                                        return {
+                                          day: open.day,
+                                          open: open.open,
+                                          openTime: open.openTime,
+                                          closeTime: open.closeTime,
+                                        };
+                                      }
+                                    );
+
+                                    //ramps
+                                    const rampsInLocation = rampsData.filter(
+                                      (ramp: any) =>
+                                        ramp.locationName === locationData.name
+                                    );
+                                    const ramps = rampsInLocation.map(
+                                      (ramp: any) => {
+                                        return {
+                                          slope: ramp.slope,
+                                          level: ramp.level,
+                                          handrail: ramp.handrail,
+                                          located: ramp.located,
+                                          floor: ramp.floor,
+                                          remark: ramp.remark,
+                                        };
+                                      }
+                                    );
+
+                                    //doors
+                                    const doorsInLocation = doorsData.filter(
+                                      (door: any) =>
+                                        door.locationName === locationData.name
+                                    );
+                                    const doors = doorsInLocation.map(
+                                      (door: any) => {
+                                        return {
+                                          doorType: door.doorType,
+                                          passable: door.passable,
+                                          located: door.located,
+                                          floor: door.floor,
+                                          remark: door.remark,
+                                        };
+                                      }
+                                    );
+
+                                    //toilet
+                                    const toiletsInLocation =
+                                      toiletsData.filter(
+                                        (toilet: any) =>
+                                          toilet.locationName ===
+                                          locationData.name
+                                      );
+                                    const toilets = toiletsInLocation.map(
+                                      (toilet: any) => {
+                                        return {
+                                          type: toilet.type,
+                                          doorType: toilet.doorType,
+                                          handrail: toilet.handrail,
+                                          located: toilet.located,
+                                          floor: toilet.floor,
+                                          remark: toilet.remark,
+                                        };
+                                      }
+                                    );
+
+                                    //elevator
+                                    const elevatorsInLocation =
+                                      elevatorsData.filter(
+                                        (elevator: any) =>
+                                          elevator.locationName ===
+                                          locationData.name
+                                      );
+                                    const elevators = elevatorsInLocation.map(
+                                      (elevator: any) => {
+                                        return {
+                                          switch: elevator.switch,
+                                          passable: elevator.passable,
+                                          located: elevator.located,
+                                          floor: elevator.floor,
+                                          remark: elevator.remark,
+                                        };
+                                      }
+                                    );
+
+                                    //parking
+                                    const parkingsInLocation =
+                                      parkingsData.filter(
+                                        (parking: any) =>
+                                          parking.locationName ===
+                                          locationData.name
+                                      );
+                                    const parkings = parkingsInLocation.map(
+                                      (parking: any) => {
+                                        return {
+                                          enoughSpace: parking.enoughSpace,
+                                          nearEntry: parking.nearEntry,
+                                          located: parking.located,
+                                          floor: parking.floor,
+                                          remark: parking.remark,
+                                        };
+                                      }
+                                    );
+
+                                    //insert
+                                    const location = await Location.create(
+                                      {
+                                        ...locationData,
+                                        opens: opens,
+                                        ramps: ramps,
+                                        doors: doors,
+                                        toilets: toilets,
+                                        elevators: elevators,
+                                        parkings: parkings,
+                                      },
+                                      {
+                                        include: [
+                                          Open,
+                                          Ramp,
+                                          Door,
+                                          Toilet,
+                                          Elevator,
+                                          Parking,
+                                        ],
+                                      }
+                                    );
+                                  }
+
+                                  // console.log(locationRestaurantsData);
+                                  for (let locationRestaurantData of locationRestaurantsData) {
+                                    const location = await Location.findOne({
+                                      where: {
+                                        name: locationRestaurantData.locationName,
+                                      },
+                                    });
+                                    if (location) {
+                                      let restaurant = await Restaurant.findOne(
+                                        {
+                                          where: {
+                                            name: locationRestaurantData.name,
+                                          },
+                                        }
+                                      );
+                                      if (!restaurant) {
+                                        restaurant = await Restaurant.create({
+                                          name: locationRestaurantData.name,
+                                          category:
+                                            locationRestaurantData.category,
+                                          // logoURL: locationRestaurantData.logoURL
+                                        });
+                                      }
+                                      const locationRestaurant =
+                                        await LocationRestaurant.create({
+                                          locationId: location.toJSON().id,
+                                          restaurantId: restaurant.toJSON().id,
+                                          located:
+                                            locationRestaurantData.located,
+                                          floor: locationRestaurantData.floor,
+                                          count: locationRestaurantData.count,
+                                          level: locationRestaurantData.level,
+                                          // imageURL:locationRestaurantData.imageURL,
+                                          remark: locationRestaurantData.remark,
+                                        });
+                                      console.log(locationRestaurant.toJSON());
+                                    }
+                                  }
+                                  //// display
+                                  // const location1 = await Location.findOne({
+                                  //   where: { id: 1 },
+                                  //   include: [Restaurant, Door, Ramp],
+                                  // });
+                                  // console.log(location1?.toJSON());
+
+                                  // const restaruant1 = await Restaurant.findOne({
+                                  //   where: { id: 1 },
+                                  //   include: [
+                                  //     {
+                                  //       model: Location,
+                                  //       where: { id: 1 },
+                                  //       include: [Door, Ramp],
+                                  //     },
+                                  //   ],
+                                  // });
+                                  // console.log(restaruant1?.toJSON());
+                                });
+                            });
+                        });
+                    });
                 });
-              }
-              location.addRestaurant();
-              // const resterauntInLocation = await LocationRestaurant.create({
-              //   locationId: location.toJSON().id,
-              //   restaurantId: restaurant.toJSON().id,
-              //   located: locationRestaurant.located,
-              //   floor: locationRestaurant.floor,
-              //   count: locationRestaurant.count,
-              //   level: locationRestaurant.level,
-              //   // imageURL:locationRestaurant.imageURL,
-              // });
-              // console.log(resterauntInLocation);
-              // const l = await Location.findOne({
-              //   where: {
-              //     name: locationRestaurant.locationName,
-              //   },
-              // });
-            }
-          }
+            });
         });
-      //           });
-      //       });
-      //   });
-      // });
     });
+};
+
+const toBoolean = (input: string) => {
+  if (input === "TURE") {
+    return true;
+  } else {
+    return false;
+  }
 };

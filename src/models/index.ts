@@ -1,4 +1,5 @@
 import Location from "./location";
+import Open from "./open";
 import Ramp from "./ramp";
 import Toilet from "./toilet";
 import Elevator from "./elevator";
@@ -7,12 +8,12 @@ import Door from "./door";
 import Image from "./image";
 import Restaurant from "./restaurant";
 import LocationRestaurant from "./locationRestaurant";
-import Open from "./open";
 import sequelize from "../database";
 import { storeData } from "../upload/upload";
 
 export {
   Location,
+  Open,
   Ramp,
   Toilet,
   Elevator,

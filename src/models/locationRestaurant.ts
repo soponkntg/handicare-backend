@@ -22,6 +22,10 @@ const LocationRestaurant = sequelize.define("location_restaurant", {
     type: Sequelize.STRING,
     //   allowNull: false,
   },
+  remark: {
+    type: Sequelize.STRING,
+    allowNull: false,
+  },
 });
 
 export default LocationRestaurant;
