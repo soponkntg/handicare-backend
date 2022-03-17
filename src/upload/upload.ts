@@ -132,7 +132,6 @@ export const storeData = async () => {
                                 switch: row["Wheel Chair Switch"],
                                 passable: toBoolean(row["Passable"]),
                                 located: row["Located"],
-                                floor: row["Floor"],
                                 remark: row["Remark"],
                               };
                               elevatorsData.push(data);
@@ -243,7 +242,6 @@ export const storeData = async () => {
                                           switch: elevator.switch,
                                           passable: elevator.passable,
                                           located: elevator.located,
-                                          floor: elevator.floor,
                                           remark: elevator.remark,
                                         };
                                       }

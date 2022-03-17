@@ -20,10 +20,6 @@ const Elevator = sequelize.define("elevator", {
     type: Sequelize.STRING,
     allowNull: false,
   },
-  floor: {
-    type: Sequelize.STRING,
-    allowNull: false,
-  },
   remark: Sequelize.STRING,
 });
 
