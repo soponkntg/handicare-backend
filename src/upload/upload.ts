@@ -322,7 +322,7 @@ export const storeData = async () => {
                                           floor: locationRestaurantData.floor,
                                           count: locationRestaurantData.count,
                                           level: locationRestaurantData.level,
-                                          // imageURL:locationRestaurantData.imageURL,
+                                          imageURL:locationRestaurantData.imageURL,
                                           remark: locationRestaurantData.remark,
                                         });
                                       console.log(locationRestaurant.toJSON());

@@ -7,7 +7,7 @@ import accountRoutes from "./routes/account";
 dotenv.config();
 const app = express();
 
-// initDB();
+initDB();
 
 app.use("/data", dataRoutes);
 app.use("/account", accountRoutes);

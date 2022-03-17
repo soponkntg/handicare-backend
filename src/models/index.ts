@@ -5,7 +5,7 @@ import Toilet from "./toilet";
 import Elevator from "./elevator";
 import Parking from "./parking";
 import Door from "./door";
-import Image from "./image";
+import LocationImage from "./locationImage";
 import Restaurant from "./restaurant";
 import LocationRestaurant from "./locationRestaurant";
 import sequelize from "../database";
@@ -19,7 +19,7 @@ export {
   Elevator,
   Parking,
   Door,
-  Image,
+  LocationImage,
   Restaurant,
   LocationRestaurant,
 };
@@ -28,7 +28,7 @@ Location.hasMany(Toilet);
 Location.hasMany(Elevator);
 Location.hasMany(Parking);
 Location.hasMany(Door);
-Location.hasMany(Image);
+Location.hasMany(LocationImage);
 Location.hasMany(Open);
 Location.belongsToMany(Restaurant, { through: LocationRestaurant });
 Restaurant.belongsToMany(Location, { through: LocationRestaurant });
@@ -37,7 +37,7 @@ Toilet.belongsTo(Location, { constraints: true, onDelete: "CASCADE" });
 Elevator.belongsTo(Location, { constraints: true, onDelete: "CASCADE" });
 Parking.belongsTo(Location, { constraints: true, onDelete: "CASCADE" });
 Door.belongsTo(Location, { constraints: true, onDelete: "CASCADE" });
-Image.belongsTo(Location, { constraints: true, onDelete: "CASCADE" });
+LocationImage.belongsTo(Location, { constraints: true, onDelete: "CASCADE" });
 Open.belongsTo(Location, { constraints: true, onDelete: "CASCADE" });
 
 export const initDB = () => {
