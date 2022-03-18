@@ -9,7 +9,7 @@ dotenv.config();
 const app = express();
 const jsonParser = bodyParser.json();
 
-// initDB();
+initDB();
 
 app.use("/data", jsonParser, dataRoutes);
 app.use("/account", jsonParser, accountRoutes);

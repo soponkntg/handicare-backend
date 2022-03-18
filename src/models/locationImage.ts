@@ -1,17 +1,17 @@
 import Sequelize from "sequelize";
 import sequelize from "../database";
 
-const Image = sequelize.define("image", {
+const LocationImage = sequelize.define("location_image", {
   id: {
     type: Sequelize.INTEGER,
     autoIncrement: true,
     allowNull: false,
     primaryKey: true,
   },
-  imageURL: {
+  imageURLs: {
     type: Sequelize.STRING,
     allowNull: false,
   },
 });
 
-export default Image;
+export default LocationImage;
