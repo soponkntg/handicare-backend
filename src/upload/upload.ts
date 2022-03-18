@@ -22,7 +22,7 @@ const parkingsData: any = [];
 const rampsData: any = [];
 
 export const storeData = async () => {
-  fs.createReadStream(path.join(__dirname, "location.csv"))
+  fs.createReadStream(path.join(__dirname, "collection/location.csv"))
     .pipe(csv())
     .on("data", (row) => {
       const data = {
@@ -37,14 +37,16 @@ export const storeData = async () => {
       locationsData.push(data);
     })
     .on("end", async () => {
-      fs.createReadStream(path.join(__dirname, "location_restaurant.csv"))
+      fs.createReadStream(
+        path.join(__dirname, "collection/location_restaurant.csv")
+      )
         .pipe(csv())
         .on("data", async (row) => {
           //read locationRestaurant file
 
           const data = {
             locationName: row["Location_Name"],
-            name: row["Restaurant _Name"],
+            name: row["Restaurant_Name"],
             category: row["Category"],
             level: +row["Level"],
             located: row["Located"],
@@ -55,7 +57,7 @@ export const storeData = async () => {
           locationRestaurantsData.push(data);
         })
         .on("end", async () => {
-          fs.createReadStream(path.join(__dirname, "ramp.csv"))
+          fs.createReadStream(path.join(__dirname, "collection/open.csv"))
             .pipe(csv())
             .on("data", async (row) => {
               // read open file
@@ -70,7 +72,7 @@ export const storeData = async () => {
               opensData.push(data);
             })
             .on("end", async () => {
-              fs.createReadStream(path.join(__dirname, "ramp.csv"))
+              fs.createReadStream(path.join(__dirname, "collection/ramp.csv"))
                 .pipe(csv())
                 .on("data", async (row) => {
                   // read ramp file
@@ -87,7 +89,9 @@ export const storeData = async () => {
                   rampsData.push(data);
                 })
                 .on("end", async () => {
-                  fs.createReadStream(path.join(__dirname, "door.csv"))
+                  fs.createReadStream(
+                    path.join(__dirname, "collection/door.csv")
+                  )
                     .pipe(csv())
                     .on("data", async (row) => {
                       // read door file
@@ -103,7 +107,9 @@ export const storeData = async () => {
                       doorsData.push(data);
                     })
                     .on("end", async () => {
-                      fs.createReadStream(path.join(__dirname, "toilet.csv"))
+                      fs.createReadStream(
+                        path.join(__dirname, "collection/toilet.csv")
+                      )
                         .pipe(csv())
                         .on("data", async (row) => {
                           // read toilet file
@@ -121,7 +127,7 @@ export const storeData = async () => {
                         })
                         .on("end", async () => {
                           fs.createReadStream(
-                            path.join(__dirname, "elevator.csv")
+                            path.join(__dirname, "collection/elevator.csv")
                           )
                             .pipe(csv())
                             .on("data", async (row) => {
@@ -138,7 +144,7 @@ export const storeData = async () => {
                             })
                             .on("end", async () => {
                               fs.createReadStream(
-                                path.join(__dirname, "elevator.csv")
+                                path.join(__dirname, "collection/elevator.csv")
                               )
                                 .pipe(csv())
                                 .on("data", async (row) => {
@@ -322,7 +328,8 @@ export const storeData = async () => {
                                           floor: locationRestaurantData.floor,
                                           count: locationRestaurantData.count,
                                           level: locationRestaurantData.level,
-                                          imageURL:locationRestaurantData.imageURL,
+                                          imageURL:
+                                            locationRestaurantData.imageURL,
                                           remark: locationRestaurantData.remark,
                                         });
                                       console.log(locationRestaurant.toJSON());
