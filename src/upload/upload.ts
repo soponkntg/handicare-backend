@@ -22,6 +22,7 @@ const parkingsData: any = [];
 const rampsData: any = [];
 
 export const storeData = async () => {
+  console.log("--INIT DATABASE--");
   fs.createReadStream(path.join(__dirname, "collection/location.csv"))
     .pipe(csv())
     .on("data", (row) => {
@@ -51,8 +52,9 @@ export const storeData = async () => {
             level: +row["Level"],
             located: row["Located"],
             floor: row["Floor"],
-            logoURL: row["Logo URL"],
+            imagesURL: row["Images URL"],
             remark: row["Remark"],
+            logoURL: row["Logo URL"],
           };
           locationRestaurantsData.push(data);
         })
@@ -135,7 +137,7 @@ export const storeData = async () => {
 
                               const data = {
                                 locationName: row["Location_Name"],
-                                switch: row["Wheel Chair Switch"],
+                                switch: toBoolean(row["Wheel Chair Switch"]),
                                 passable: toBoolean(row["Passable"]),
                                 located: row["Located"],
                                 remark: row["Remark"],
@@ -144,7 +146,7 @@ export const storeData = async () => {
                             })
                             .on("end", async () => {
                               fs.createReadStream(
-                                path.join(__dirname, "collection/elevator.csv")
+                                path.join(__dirname, "collection/parking.csv")
                               )
                                 .pipe(csv())
                                 .on("data", async (row) => {
@@ -328,11 +330,11 @@ export const storeData = async () => {
                                           floor: locationRestaurantData.floor,
                                           count: locationRestaurantData.count,
                                           level: locationRestaurantData.level,
-                                          imageURL:
-                                            locationRestaurantData.imageURL,
+                                          imagesURL:
+                                            locationRestaurantData.imagesURL,
                                           remark: locationRestaurantData.remark,
                                         });
-                                      console.log(locationRestaurant.toJSON());
+                                      // console.log(locationRestaurant.toJSON());
                                     }
                                   }
                                   //// display

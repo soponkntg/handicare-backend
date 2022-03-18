@@ -42,11 +42,11 @@ Open.belongsTo(Location, { constraints: true, onDelete: "CASCADE" });
 
 export const initDB = () => {
   sequelize
-    .sync({ force: true })
-    // .sync()
+    // .sync({ force: true })
+    .sync()
     .then((result: any) => {
-      console.log(result);
-      storeData();
+      // console.log(result);
+      // storeData();
     })
     .catch((err: any) => {
       console.log(err);
