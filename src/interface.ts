@@ -1,15 +1,25 @@
-// export interface Location {
-//   id: number;
-//   name: string;
-//   category: string;
-//   googleMap: string;
-//   locationDetail: string;
-//   lat: number;
-//   lng: number;
-//   count: number;
-//   rateAverage: number;
-//   openTime: Date;
-//   closeTime: Date;
-//   openDate: string;
-//   image: string;
-// }
+export interface LocationType {
+  locationID: number;
+  locationtionName: string;
+  placeImage: string;
+  ramp: boolean;
+  toilet: boolean;
+  elevator: boolean;
+  door: boolean;
+  parking: boolean;
+  distance: number | null;
+}
+
+export interface RestaurantType extends LocationType {
+  locationID: number;
+  locationtionName: string;
+  restaurantID: number | null;
+  restaurantName: string | null;
+  placeImage: string;
+  ramp: boolean;
+  toilet: boolean;
+  elevator: boolean;
+  door: boolean;
+  parking: boolean;
+  distance: number | null;
+}
