@@ -108,17 +108,7 @@ const getRecommendRestaurant = async (req: Request, res: Response) => {
 };
 const getAllLocation = async (req: Request, res: Response) => {
 
-  let responds: {
-    locationID: string;
-    locationtionName: string;
-    placeImage: string;
-    ramp: boolean;
-    toilet: boolean;
-    lift: boolean;
-    door: boolean;
-    parking: boolean;
-    distance: number;
-  }[] = [];
+  let responds: LocationType[] = [];
 
   const { lat, lng } = req.query as unknown as {
     lat: number;
@@ -139,23 +129,13 @@ const getAllLocation = async (req: Request, res: Response) => {
     const data = location.toJSON();
     const distance = calculateDistance(lat, data.Lat, lng, data.Lng);
 
-    const ret: {
-      locationID: string;
-      locationtionName: string;
-      placeImage: string;
-      ramp: boolean;
-      toilet: boolean;
-      lift: boolean;
-      door: boolean;
-      parking: boolean;
-      distance: number;
-    } = {
+    const ret: LocationType = {
       locationID: data.id,
       locationtionName: data.name,
       placeImage: data.imageURL,
       ramp: data.ramps.length > 0,
       toilet: data.toilets.length > 0,
-      lift: data.elevators.length > 0,
+      elevator: data.elevators.length > 0,
       door: data.doors.length > 0,
       parking: data.parkings.length > 0,
       distance: distance,
@@ -165,7 +145,8 @@ const getAllLocation = async (req: Request, res: Response) => {
 
   if (lat && lng) {
     responds.sort((a,b) => {
-      return a.distance - b.distance;
+      if (a.distance && b.distance) return a.distance - b.distance;
+      else return 0
     });
   }
   
