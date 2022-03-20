@@ -1,5 +1,5 @@
 import { Sequelize } from "sequelize";
-import { Request, Response } from "express";
+import { query, Request, Response } from "express";
 import {
   Door,
   Elevator,
@@ -19,6 +19,7 @@ const getRecommendLocation = async (req: Request, res: Response) => {
 
   //query top5 location
   const locations = await Location.findAll();
+  console.log(locations.map((location) => location.toJSON()));
   console.log(locations.every((location) => location instanceof Location));
   console.log("locations", JSON.stringify(locations, null, 2));
   res.send("locations");
@@ -61,15 +62,67 @@ const getRecommendRestaurant = async (req: Request, res: Response) => {
   res.send(lr_5);
 };
 const getAllLocation = async (req: Request, res: Response) => {
+  let responds: {
+    locationID: string;
+    locationtionName: string;
+    placeImage: string;
+    ramp: boolean;
+    toilet: boolean;
+    lift: boolean;
+    door: boolean;
+    parking: boolean;
+    distance: number;
+  }[] = [];
+
+  console.log(req.query.lat)
+
+  const { lat, lng } = req.query as unknown as { lat: number; lng: number }
+  console.log(lat, lng)
+
+
   const locations = await Location.findAll({
-    attributes: ["id", "name", "imageURL"],
+    attributes: ["id", "name", "imageURL", "Lat", "Lng"],
     include: [Ramp, Elevator, Parking, Toilet, Door],
     order: ["name"],
   });
 
-  const response = JSON.stringify(locations, null, 2);
-  console.log(response);
-  res.send(response);
+  locations.forEach((location) => {
+    const data = location.toJSON();
+    console.log(data)
+    const distance = Math.sqrt(Math.pow(data.Lat - lat, 2) + Math.pow(data.Lng - lng,2));
+    console.log(lat, lng, data.Lat, data.Lng, distance);
+
+    const ret: {
+      locationID: string;
+      locationtionName: string;
+      placeImage: string;
+      ramp: boolean;
+      toilet: boolean;
+      lift: boolean;
+      door: boolean;
+      parking: boolean;
+      distance: number;
+    } = {
+      locationID: data.id,
+      locationtionName: data.name,
+      placeImage: data.imageURL,
+      ramp: data.ramps.length > 0,
+      toilet: data.toilets.length > 0,
+      lift: data.elevators.length > 0,
+      door: data.doors.length > 0,
+      parking: data.parkings.length > 0,
+      distance: distance,
+    };
+    responds.push(ret);
+  });
+
+  responds.sort((a,b) => {
+    return a.distance - b.distance;
+  });
+  
+  const response = JSON.stringify(responds, null, 2);
+    console.log(response);
+    res.send(response);
 };
 
 const postPlace = async (req: Request, res: Response) => {};
