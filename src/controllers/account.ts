@@ -1,4 +1,5 @@
 import { Request, Response } from "express";
+import { Sequelize } from "sequelize";
 import { Comment, Location, User } from "../models";
 import { CommentType } from "../interface";
 
@@ -71,7 +72,10 @@ const getAllComment = async (req: Request, res: Response) => {
   }
 
   const ret: CommentType[] = [];
-  const comments = await Comment.findAll({ where: { locationId: locationId } });
+  const comments = await Comment.findAll({
+    where: { locationId: locationId },
+    order: [Sequelize.literal("timestamp DESC")],
+  });
   comments.forEach((c) => {
     const data = c.toJSON();
     const temp: CommentType = {
