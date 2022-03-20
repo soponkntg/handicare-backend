@@ -114,6 +114,7 @@ const getAllLocation = async (req: Request, res: Response) => {
     lat: number;
     lng: number;
   };
+  const existLatLng = (lat && lng) ? true : false;
   const locations = await Location.findAll({
     attributes: ["id", "name", "imageURL", "lat", "lng"],
     where: {
@@ -127,7 +128,7 @@ const getAllLocation = async (req: Request, res: Response) => {
 
   locations.forEach((location) => {
     const data = location.toJSON();
-    const distance = calculateDistance(lat, data.Lat, lng, data.Lng);
+    const distance = existLatLng ? calculateDistance(lat, lng, data.lat, data.lng) : null;
 
     const ret: LocationType = {
       locationID: data.id,
@@ -143,7 +144,7 @@ const getAllLocation = async (req: Request, res: Response) => {
     responds.push(ret);
   });
 
-  if (lat && lng) {
+  if (existLatLng) {
     responds.sort((a,b) => {
       if (a.distance && b.distance) return a.distance - b.distance;
       else return 0
@@ -151,8 +152,8 @@ const getAllLocation = async (req: Request, res: Response) => {
   }
   
   const response = JSON.stringify(responds, null, 2);
-    console.log(response);
-    res.send(response);
+  console.log(response);
+  res.send(response);
 };
 
 const postPlace = async (req: Request, res: Response) => {};
@@ -163,7 +164,7 @@ const calculateDistance = (
   lat2: number,
   lng2: number
 ) => {
-  return Math.sqrt((lat1 - lat2) ** 2 + (lng1 - lng2) ** 2);
+  return Math.sqrt(Math.pow(lat1 - lat2, 2) + Math.pow(lng1 - lng2,2));
 };
 
 export default {
