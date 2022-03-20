@@ -26,5 +26,9 @@
   "main": "app.ts",
   "author": "",
   "license": "ISC",
-  "description": ""
+  "description": "",
+  "devDependencies": {
+    "@types/uuid": "^8.3.4",
+    "nodemon": "^2.0.15"
+  }
 }

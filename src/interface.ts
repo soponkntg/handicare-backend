@@ -1,3 +1,6 @@
+import { Interface } from "readline";
+import { StringMappingType } from "typescript";
+
 export interface LocationType {
   locationID: number;
   locationtionName: string;
@@ -22,4 +25,12 @@ export interface RestaurantType extends LocationType {
   door: boolean;
   parking: boolean;
   distance: number | null;
+}
+
+export interface CommentType {
+  userId: number;
+  userName: string;
+  profileImageURL: string;
+  message: string;
+  timestamp: string;
 }

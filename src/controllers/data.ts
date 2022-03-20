@@ -167,9 +167,13 @@ const calculateDistance = (
   return Math.sqrt(Math.pow(lat1 - lat2, 2) + Math.pow(lng1 - lng2,2));
 };
 
+const getMoreComment = async (req: Request, res: Response) => {};
+
+
 export default {
   getRecommendLocation,
   getRecommendRestaurant,
   getAllLocation,
   postPlace,
+  getMoreComment,
 };
