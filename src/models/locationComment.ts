@@ -1,7 +1,7 @@
 import Sequelize from "sequelize";
 import sequelize from "../database";
 
-const Comment = sequelize.define("comment", {
+const LocationComment = sequelize.define("location_comment", {
   id: {
     type: Sequelize.INTEGER,
     autoIncrement: true,
@@ -17,18 +17,9 @@ const Comment = sequelize.define("comment", {
     allowNull: true,
   },
   timestamp: {
-    type: Sequelize.STRING,
+    type: Sequelize.DATE,
     allowNull: false,
   },
-  profileImageURL: {
-    type: Sequelize.STRING,
-    allowNull: false,
-  },
-  username: {
-    type: Sequelize.STRING,
-    allowNull: false,
-  },
-
 });
 
-export default Comment;
+export default LocationComment;

@@ -50,6 +50,7 @@ export const storeData = async () => {
             name: row["Restaurant_Name"],
             category: row["Category"],
             level: +row["Level"],
+            doorType: row["Door Type"],
             located: row["Located"],
             floor: row["Floor"],
             imagesURL: row["Images URL"],
@@ -329,7 +330,11 @@ export const storeData = async () => {
                                             locationRestaurantData.located,
                                           floor: locationRestaurantData.floor,
                                           count: locationRestaurantData.count,
-                                          level: locationRestaurantData.level,
+                                          level: mapLevel(
+                                            locationRestaurantData.level
+                                          ),
+                                          doorType:
+                                            locationRestaurantData.doorType,
                                           imagesURL:
                                             locationRestaurantData.imagesURL,
                                           remark: locationRestaurantData.remark,
@@ -337,24 +342,6 @@ export const storeData = async () => {
                                       // console.log(locationRestaurant.toJSON());
                                     }
                                   }
-                                  //// display
-                                  // const location1 = await Location.findOne({
-                                  //   where: { id: 1 },
-                                  //   include: [Restaurant, Door, Ramp],
-                                  // });
-                                  // console.log(location1?.toJSON());
-
-                                  // const restaruant1 = await Restaurant.findOne({
-                                  //   where: { id: 1 },
-                                  //   include: [
-                                  //     {
-                                  //       model: Location,
-                                  //       where: { id: 1 },
-                                  //       include: [Door, Ramp],
-                                  //     },
-                                  //   ],
-                                  // });
-                                  // console.log(restaruant1?.toJSON());
                                 });
                             });
                         });
@@ -363,6 +350,12 @@ export const storeData = async () => {
             });
         });
     });
+};
+
+const mapLevel = (input: number) => {
+  if (0) return "Accessible routes";
+  if (1) return "Slightly steep";
+  if (2) return "Require assistance";
 };
 
 const toBoolean = (input: string) => {

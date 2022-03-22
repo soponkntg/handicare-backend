@@ -8,7 +8,7 @@ const LocationImage = sequelize.define("location_image", {
     allowNull: false,
     primaryKey: true,
   },
-  imageURLs: {
+  imageURL: {
     type: Sequelize.STRING,
     allowNull: false,
   },

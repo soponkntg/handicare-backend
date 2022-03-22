@@ -8,10 +8,11 @@ import Door from "./door";
 import LocationImage from "./locationImage";
 import Restaurant from "./restaurant";
 import LocationRestaurant from "./locationRestaurant";
-import sequelize from "../database";
 import User from "./user";
-import Comment from "./comment";
+import LocationComment from "./locationComment";
+import RestaurantComment from "./restaurantComment";
 import { storeData } from "../upload/upload";
+import sequelize from "../database";
 
 export {
   Location,
@@ -24,8 +25,8 @@ export {
   LocationImage,
   Restaurant,
   LocationRestaurant,
-  Comment,
-  User
+  LocationComment,
+  User,
 };
 Location.hasMany(Ramp);
 Location.hasMany(Toilet);
@@ -36,8 +37,22 @@ Location.hasMany(LocationImage);
 Location.hasMany(Open);
 Location.belongsToMany(Restaurant, { through: LocationRestaurant });
 Restaurant.belongsToMany(Location, { through: LocationRestaurant });
-Location.belongsToMany(User, {through: {model: Comment, unique: false}, onDelete: "CASCADE"});
-User.belongsToMany(Location, {through: {model: Comment, unique: false}, onDelete: "SET NULL"});
+Location.belongsToMany(User, {
+  through: { model: LocationComment, unique: false },
+  onDelete: "CASCADE",
+});
+User.belongsToMany(Location, {
+  through: { model: LocationComment, unique: false },
+  onDelete: "SET NULL",
+});
+LocationRestaurant.belongsToMany(User, {
+  through: { model: RestaurantComment, unique: false },
+  onDelete: "CASCADE",
+});
+User.belongsToMany(LocationRestaurant, {
+  through: { model: RestaurantComment, unique: false },
+  onDelete: "SET NULL",
+});
 Ramp.belongsTo(Location, { constraints: true, onDelete: "CASCADE" });
 Toilet.belongsTo(Location, { constraints: true, onDelete: "CASCADE" });
 Elevator.belongsTo(Location, { constraints: true, onDelete: "CASCADE" });

@@ -1,24 +1,25 @@
 import Sequelize from "sequelize";
 import sequelize from "../database";
 
-const User = sequelize.define("user", {
+const RestaurantComment = sequelize.define("restaurant_comment", {
   id: {
-    type: Sequelize.STRING,
+    type: Sequelize.INTEGER,
+    autoIncrement: true,
     allowNull: false,
     primaryKey: true,
   },
-  username: {
+  message: {
     type: Sequelize.STRING,
     allowNull: false,
   },
-  profileImageURL: {
+  rating: {
     type: Sequelize.STRING,
-    allowNull: false,
+    allowNull: true,
   },
-  email: {
-    type: Sequelize.STRING,
+  timestamp: {
+    type: Sequelize.DATE,
     allowNull: false,
   },
 });
 
-export default User;
+export default RestaurantComment;

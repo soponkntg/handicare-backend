@@ -5,6 +5,7 @@ const router = express.Router();
 router.get("/recommend/location", dataController.getRecommendLocation);
 router.get("/recommend/restaurant", dataController.getRecommendRestaurant);
 router.get("/locations", dataController.getAllLocation);
-router.post("/place", dataController.postPlace);
+router.post("/location", dataController.postLocation);
+router.post("/restaurant", dataController.postRestaurant);
 
 export default router;

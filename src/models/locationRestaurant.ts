@@ -18,6 +18,10 @@ const LocationRestaurant = sequelize.define("location_restaurant", {
     type: Sequelize.STRING,
     allowNull: false,
   },
+  doorType: {
+    type: Sequelize.STRING,
+    allowNull: false,
+  },
   imagesURL: {
     type: Sequelize.STRING,
     allowNull: false,
@@ -25,6 +29,10 @@ const LocationRestaurant = sequelize.define("location_restaurant", {
   remark: {
     type: Sequelize.STRING,
     allowNull: false,
+  },
+  rateAverage: {
+    type: Sequelize.DOUBLE,
+    defaultValue: 0,
   },
 });
 
