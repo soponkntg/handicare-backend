@@ -359,7 +359,7 @@ const mapLevel = (input: number) => {
 };
 
 const toBoolean = (input: string) => {
-  if (input === "TURE") {
+  if (input === "TRUE") {
     return true;
   } else {
     return false;

@@ -5,7 +5,7 @@ import {
   Location,
   User,
   LocationRestaurant,
-  RestaurantComment,
+  LocationRestaurantComment,
 } from "../models";
 import { CommentType } from "../interface";
 
@@ -40,10 +40,12 @@ const postLocationComment = async (req: Request, res: Response) => {
 
   if (rating) {
     const rateAverage = await LocationComment.findOne({
-        attributes: [[Sequelize.fn('avg', Sequelize.col('rating')), 'rateAverage']],
-        where: { locationId: locationId },
-        raw: true,
-      });
+      attributes: [
+        [Sequelize.fn("avg", Sequelize.col("rating")), "rateAverage"],
+      ],
+      where: { locationId: locationId },
+      raw: true,
+    });
 
     if (rateAverage) {
       await location.update(rateAverage);
@@ -53,7 +55,7 @@ const postLocationComment = async (req: Request, res: Response) => {
   res.send("success");
 };
 
-const postRestaurantComment = async (req: Request, res: Response) => {
+const postLocationRestaurantComment = async (req: Request, res: Response) => {
   const { userId, locationId, restaurantId, message, rating } =
     req.body as unknown as {
       userId: string;
@@ -75,9 +77,10 @@ const postRestaurantComment = async (req: Request, res: Response) => {
   const locationRestaurant = await LocationRestaurant.findOne({
     where: { restaurantId: restaurantId, locationId: locationId },
   });
-  if (locationRestaurant == null) return res.send("invalid location restaurant");
+  if (locationRestaurant == null)
+    return res.send("invalid location restaurant");
 
-  const id = locationRestaurant.toJSON().id
+  const id = locationRestaurant.toJSON().id;
   const inp = {
     userId: userId,
     locationRestaurantId: id,
@@ -86,13 +89,14 @@ const postRestaurantComment = async (req: Request, res: Response) => {
     rating: rating,
   };
 
-  const cmt = await RestaurantComment.create(inp);
+  const cmt = await LocationRestaurantComment.create(inp);
   console.log(cmt.toJSON());
 
   if (rating) {
-
-    const rateAverage = await RestaurantComment.findOne({
-      attributes: [[Sequelize.fn('avg', Sequelize.col('rating')), 'rateAverage']],
+    const rateAverage = await LocationRestaurantComment.findOne({
+      attributes: [
+        [Sequelize.fn("avg", Sequelize.col("rating")), "rateAverage"],
+      ],
       where: { locationRestaurantId: id },
       raw: true,
     });
@@ -139,7 +143,7 @@ const getMoreRestaurantComment = async (req: Request, res: Response) => {
     res.send("invalid input: location id");
   }
   if (!restaurantId) {
-    res.send("invalid ipnut: restaurant id")
+    res.send("invalid ipnut: restaurant id");
   }
   if (!offset) {
     res.send("invalid input: offset");
@@ -147,7 +151,7 @@ const getMoreRestaurantComment = async (req: Request, res: Response) => {
 
   const ret: CommentType[] = [];
 
-  const comments = await RestaurantComment.findAll({
+  const comments = await LocationRestaurantComment.findAll({
     where: { locationId: locationId, restaurantId: restaurantId },
     order: [Sequelize.literal("timestamp DESC")],
     offset: offset,
@@ -184,9 +188,9 @@ const createUser = async (req: Request, res: Response) => {
     email: string;
   };
   if (!id || !username || !profileImageURL || !email) {
-    return res.send("invalid input")
+    return res.send("invalid input");
   }
-  console.log(id, username, profileImageURL, email)
+  console.log(id, username, profileImageURL, email);
   await User.create({
     id: id,
     username: username,
@@ -198,7 +202,7 @@ const createUser = async (req: Request, res: Response) => {
 
 export default {
   postLocationComment,
-  postRestaurantComment,
+  postLocationRestaurantComment,
   getMoreLocationComment,
   getMoreRestaurantComment,
   createUser,

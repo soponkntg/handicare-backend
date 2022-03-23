@@ -13,12 +13,14 @@ import {
   LocationRestaurant,
   LocationComment,
   User,
+  LocationRestaurantComment,
 } from "../models";
 import {
   LocationType,
   RestaurantType,
   LocationDeatail,
   CommentType,
+  LocationRestaurantDeatail,
 } from "../interface";
 
 const getRecommendLocation = async (req: Request, res: Response) => {
@@ -126,7 +128,7 @@ const getRecommendRestaurant = async (req: Request, res: Response) => {
       responds.push({
         locationID: r.id,
         locationtionName: r.name,
-        restaurantID: r.null,
+        restaurantID: null,
         restaurantName: null,
         placeImage: r.imageURL,
         ramp: r.ramps.length > 0,
@@ -192,12 +194,13 @@ const getAllLocation = async (req: Request, res: Response) => {
 };
 
 const postLocation = async (req: Request, res: Response) => {
-  const { lat, lng, locationId, userId } = req.body as {
+  const { lat, lng, locationId } = req.body as {
     lat: number;
     lng: number;
     locationId: number;
-    userId: number;
   };
+
+  //query location detail
   const l = await Location.findOne({
     where: {
       id: locationId,
@@ -235,21 +238,22 @@ const postLocation = async (req: Request, res: Response) => {
       },
     ],
   });
-  const comments = await LocationComment.findAll({
+  const location = l?.toJSON();
+
+  //query location comment
+  const locationComments = await LocationComment.findAll({
     where: { locationId: locationId },
     limit: 12,
     order: [Sequelize.literal("timestamp DESC")],
   });
-  for (let c of comments) {
-    const comment = c.toJSON();
-  }
-  const location = l?.toJSON();
-  console.log(location);
+  const comments: CommentType[] = await createCommentFormat(locationComments);
+
+  //map respond
   const respond: LocationDeatail = {
     locationId: location.id,
     locationName: location.name,
     category: location.category,
-    locationDetail: location.locationDetail,
+    located: location.locationDetail,
     lat: location.lat,
     lng: location.lng,
     distance:
@@ -260,34 +264,117 @@ const postLocation = async (req: Request, res: Response) => {
     images: location.location_images.map((image: any) => {
       return image.imageURL;
     }),
-    openTime: location.opens.map((open: any) => {
-      if (open.open) {
-        const openTime = open.openTime.split(":");
-        const closeTime = open.closeTime.split(":");
-        return {
-          day: open.day,
-          time: `${openTime[0]}:${openTime[1]}-${closeTime[0]}:${closeTime[1]}`,
-        };
-      } else {
-        return {
-          day: open.day,
-          time: "Close",
-        };
-      }
-    }),
+    openTime: creatOpentimeFormat(location.opens),
     ramps: location.ramps,
     toilets: location.toilets,
     doors: location.doors,
     elevators: location.elevators,
     parkings: location.parkings,
-    restaurant: location.restaurants,
-    comments: [],
+    restaurants: location.restaurants,
+    comments: comments,
   };
+
+  //upadate count
+  await l?.increment("count", { by: 1 });
 
   res.send(respond);
 };
 
-const postRestaurant = async (req: Request, res: Response) => {};
+const postLocationRestaurant = async (req: Request, res: Response) => {
+  const { lat, lng, locationId, restaurantId } = req.body as {
+    lat: number;
+    lng: number;
+    locationId: number;
+    restaurantId: number;
+  };
+
+  //query locationrestaurant detail
+  const r = await Restaurant.findOne({
+    where: {
+      id: restaurantId,
+    },
+    include: [
+      {
+        model: Location,
+        where: { id: locationId },
+        include: [
+          Open,
+          {
+            model: Door,
+            attributes: { exclude: ["createdAt", "updatedAt"] },
+          },
+          {
+            model: Elevator,
+            attributes: { exclude: ["createdAt", "updatedAt"] },
+          },
+          {
+            model: Parking,
+            attributes: { exclude: ["createdAt", "updatedAt"] },
+          },
+          {
+            model: Ramp,
+            attributes: { exclude: ["createdAt", "updatedAt"] },
+          },
+          {
+            model: Toilet,
+            attributes: { exclude: ["createdAt", "updatedAt"] },
+          },
+        ],
+      },
+    ],
+  });
+  const restaurant = r?.toJSON();
+  const location = restaurant.locations[0];
+  const locationRestaurant = location.location_restaurant;
+
+  //query locationrestaurant comment
+  const locationRestuarantComments = await LocationRestaurantComment.findAll({
+    where: { locationRestaurantId: locationRestaurant.id },
+    limit: 12,
+    order: [Sequelize.literal("timestamp DESC")],
+  });
+  const comments = await createCommentFormat(locationRestuarantComments);
+
+  //map respond
+  const respond: LocationRestaurantDeatail = {
+    restaurantId: restaurant.id,
+    restaurantName: restaurant.name,
+    logoURL: restaurant.logoURL,
+    floor: locationRestaurant.floor,
+    locationId: location.id,
+    locationName: location.name,
+    category: restaurant.category,
+    located: locationRestaurant.located,
+    lat: location.lat,
+    lng: location.lng,
+    distance:
+      lat && lng
+        ? calculateDistance(lat, lng, location.lat, location.lng)
+        : null,
+    rating: locationRestaurant.rateAverage,
+    images: locationRestaurant.imagesURL.split("\\"),
+    entrance: locationRestaurant.level,
+    doorType: locationRestaurant.doorType,
+    openTime: creatOpentimeFormat(location.opens),
+    ramps: location.ramps,
+    toilets: location.toilets,
+    doors: location.doors,
+    elevators: location.elevators,
+    parkings: location.parkings,
+    restaurants: [],
+    comments: comments,
+  };
+
+  //update count
+  await LocationRestaurant.increment("count", {
+    by: 1,
+    where: { restaurantId: restaurant.id, locationId: location.id },
+  });
+
+  res.send(respond);
+};
+
+const getMoreComment = async (req: Request, res: Response) => {};
 
 const calculateDistance = (
   lat1: number,
@@ -298,13 +385,49 @@ const calculateDistance = (
   return Math.sqrt(Math.pow(lat1 - lat2, 2) + Math.pow(lng1 - lng2, 2));
 };
 
-const getMoreComment = async (req: Request, res: Response) => {};
+const creatOpentimeFormat = (opens: any) => {
+  return opens.map((open: any) => {
+    if (open.open) {
+      const openTime = open.openTime.split(":");
+      const closeTime = open.closeTime.split(":");
+      return {
+        day: open.day,
+        time: `${openTime[0]}:${openTime[1]}-${closeTime[0]}:${closeTime[1]}`,
+      };
+    } else {
+      return {
+        day: open.day,
+        time: "Close",
+      };
+    }
+  });
+};
+
+const createCommentFormat = async (cs: any) => {
+  const comments: CommentType[] = [];
+  for (let c of cs) {
+    const locationRestaurantComment = c.toJSON();
+    const u = await User.findOne({
+      where: { id: locationRestaurantComment.userId },
+      attributes: ["id", "username", "profileImageURL"],
+    });
+    const user = u?.toJSON();
+    comments.push({
+      userId: user.id,
+      userName: user.userName,
+      profileImageURL: user.profileImageURL,
+      message: locationRestaurantComment.message,
+      timestamp: locationRestaurantComment.timestamp,
+    });
+  }
+  return comments;
+};
 
 export default {
   getRecommendLocation,
   getRecommendRestaurant,
   getAllLocation,
   postLocation,
-  postRestaurant,
+  postLocationRestaurant,
   getMoreComment,
 };

@@ -10,7 +10,7 @@ import Restaurant from "./restaurant";
 import LocationRestaurant from "./locationRestaurant";
 import User from "./user";
 import LocationComment from "./locationComment";
-import RestaurantComment from "./restaurantComment";
+import LocationRestaurantComment from "./LocationRestaurantComment";
 import { storeData } from "../upload/upload";
 import sequelize from "../database";
 
@@ -26,7 +26,7 @@ export {
   Restaurant,
   LocationRestaurant,
   LocationComment,
-  RestaurantComment,
+  LocationRestaurantComment,
   User,
 };
 Location.hasMany(Ramp);
@@ -47,11 +47,11 @@ User.belongsToMany(Location, {
   onDelete: "SET NULL",
 });
 LocationRestaurant.belongsToMany(User, {
-  through: { model: RestaurantComment, unique: false },
+  through: { model: LocationRestaurantComment, unique: false },
   onDelete: "CASCADE",
 });
 User.belongsToMany(LocationRestaurant, {
-  through: { model: RestaurantComment, unique: false },
+  through: { model: LocationRestaurantComment, unique: false },
   onDelete: "SET NULL",
 });
 Ramp.belongsTo(Location, { constraints: true, onDelete: "CASCADE" });
