@@ -26,6 +26,7 @@ export {
   Restaurant,
   LocationRestaurant,
   LocationComment,
+  RestaurantComment,
   User,
 };
 Location.hasMany(Ramp);

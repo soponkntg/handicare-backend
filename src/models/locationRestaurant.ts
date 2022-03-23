@@ -2,6 +2,12 @@ import Sequelize from "sequelize";
 import sequelize from "../database";
 
 const LocationRestaurant = sequelize.define("location_restaurant", {
+  id: {
+    type: Sequelize.INTEGER,
+    autoIncrement: true,
+    allowNull: false,
+    primaryKey: true,
+  },
   located: {
     type: Sequelize.STRING,
     allowNull: false,
