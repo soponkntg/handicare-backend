@@ -8,7 +8,6 @@ import {
   RestaurantComment,
 } from "../models";
 import { CommentType } from "../interface";
-import { AnyFunction } from "sequelize/types/utils";
 
 const postLocationComment = async (req: Request, res: Response) => {
   const { userId, locationId, message, rating } = req.body as unknown as {
@@ -40,27 +39,14 @@ const postLocationComment = async (req: Request, res: Response) => {
   console.log(cmt.toJSON());
 
   if (rating) {
-    const comments = await LocationComment.findAll({
-      where: { locationId: locationId },
-    });
-
-    let ratings = 0;
-    let count = 0;
-
-    comments.forEach((c) => {
-      const data = c.toJSON();
-      if (data.rating) {
-        ratings += parseInt(data.rating);
-        count += 1;
-      }
-    });
-
-    if (count == 0) {
-      await location.update({ rateAverage: 0 });
-    } else {
-      await location.update({
-        rateAverage: ratings / count,
+    const rateAverage = await LocationComment.findOne({
+        attributes: [[Sequelize.fn('avg', Sequelize.col('rating')), 'rateAverage']],
+        where: { locationId: locationId },
+        raw: true,
       });
+
+    if (rateAverage) {
+      await location.update(rateAverage);
     }
   }
 
@@ -81,18 +67,20 @@ const postRestaurantComment = async (req: Request, res: Response) => {
     return res.send("unsuccessful: invalid input");
   }
 
+  console.log(userId, locationId, restaurantId, message, rating);
+
   const user = await User.findOne({ where: { id: userId } });
   if (user == null) return res.send("invalid user id");
 
-  const restaurant = await LocationRestaurant.findOne({
-    where: { restaurantId: restaurantId, locatinId: locationId },
+  const locationRestaurant = await LocationRestaurant.findOne({
+    where: { restaurantId: restaurantId, locationId: locationId },
   });
-  if (restaurant == null) return res.send("invalid location restaurant");
+  if (locationRestaurant == null) return res.send("invalid location restaurant");
 
+  const id = locationRestaurant.toJSON().id
   const inp = {
     userId: userId,
-    restaurantId: restaurantId,
-    locationId: locationId,
+    locationRestaurantId: id,
     message: message,
     timestamp: timestamp,
     rating: rating,
@@ -102,34 +90,46 @@ const postRestaurantComment = async (req: Request, res: Response) => {
   console.log(cmt.toJSON());
 
   if (rating) {
-    const comments = await RestaurantComment.findAll({
-      where: { restaurantId: restaurantId, locationId: locationId },
+
+    const rateAverage = await RestaurantComment.findOne({
+      attributes: [[Sequelize.fn('avg', Sequelize.col('rating')), 'rateAverage']],
+      where: { locationRestaurantId: id },
+      raw: true,
     });
 
-    let ratings = 0;
-    let count = 0;
-
-    comments.forEach((c) => {
-      const data = c.toJSON();
-      if (data.rating) {
-        ratings += parseInt(data.rating);
-        count += 1;
-      }
-    });
-
-    if (count == 0) {
-      await restaurant.update({ rateAverage: 0 });
-    } else {
-      await restaurant.update({
-        rateAverage: ratings / count,
-      });
+    if (rateAverage) {
+      await locationRestaurant.update(rateAverage);
     }
   }
 
   res.send("success");
 };
 
-const getMoreComment = async (req: Request, res: Response) => {
+const getMoreLocationComment = async (req: Request, res: Response) => {
+  const { locationId, offset } = req.query as unknown as {
+    locationId: number;
+    offset: number;
+  };
+  if (!locationId) {
+    res.send("invalid input: location id");
+  }
+  if (!offset) {
+    res.send("invalid input: offset");
+  }
+
+  const ret: CommentType[] = [];
+  const comments = await LocationComment.findAll({
+    where: { locationId: locationId },
+    order: [Sequelize.literal("timestamp DESC")],
+    offset: offset,
+    limit: 12,
+  });
+
+  comments.forEach((c) => getCommentData(c.toJSON(), ret));
+  res.send(JSON.stringify(ret, null, 2));
+};
+
+const getMoreRestaurantComment = async (req: Request, res: Response) => {
   const { restaurantId, locationId, offset } = req.query as unknown as {
     restaurantId: number;
     locationId: number;
@@ -143,33 +143,16 @@ const getMoreComment = async (req: Request, res: Response) => {
   }
 
   const ret: CommentType[] = [];
-  let comments;
-  if (restaurantId) {
-    comments = await RestaurantComment.findAll({
-        where: { locationId: locationId, restaurantId: restaurantId },
-        order: [Sequelize.literal("timestamp DESC")],
-        offset: offset,
-        limit: 12,
-      });
-  } else {
-    comments = await LocationComment.findAll({
-      where: { locationId: locationId },
-      order: [Sequelize.literal("timestamp DESC")],
-      offset: offset,
-      limit: 12,
-    });
-  }
 
-  comments.forEach( c => getCommentData(c.toJSON(), ret));
+  const comments = await RestaurantComment.findAll({
+    where: { locationId: locationId, restaurantId: restaurantId },
+    order: [Sequelize.literal("timestamp DESC")],
+    offset: offset,
+    limit: 12,
+  });
+
+  comments.forEach((c) => getCommentData(c.toJSON(), ret));
   res.send(JSON.stringify(ret, null, 2));
-};
-
-const getMoreLocationComment = async (req: Request, res: Response) => {
-  res.send("success");
-};
-
-const getMoreRestaurantComment = async (req: Request, res: Response) => {
-  res.send("success");
 };
 
 const getCommentData = async (data: any, ret: CommentType[]) => {
@@ -191,14 +174,29 @@ const getCommentData = async (data: any, ret: CommentType[]) => {
 };
 
 const createUser = async (req: Request, res: Response) => {
-  console.log(req.body);
+  const { id, username, profileImageURL, email } = req.body as unknown as {
+    id: string;
+    username: string;
+    profileImageURL: string;
+    email: string;
+  };
+  if (!id || !username || !profileImageURL || !email) {
+    return res.send("invalid input")
+  }
+  console.log(id, username, profileImageURL, email)
+  await User.create({
+    id: id,
+    username: username,
+    profileImageURL: profileImageURL,
+    email: email,
+  });
   res.send("success");
 };
 
 export default {
   postLocationComment,
   postRestaurantComment,
-  createUser,
   getMoreLocationComment,
   getMoreRestaurantComment,
+  createUser,
 };
