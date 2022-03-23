@@ -138,6 +138,9 @@ const getMoreRestaurantComment = async (req: Request, res: Response) => {
   if (!locationId) {
     res.send("invalid input: location id");
   }
+  if (!restaurantId) {
+    res.send("invalid ipnut: restaurant id")
+  }
   if (!offset) {
     res.send("invalid input: offset");
   }
