@@ -39,7 +39,7 @@ export interface LocationDeatail {
   locationId: number;
   locationName: string;
   category: string;
-  locationDetail: string;
+  located: string;
   lat: number;
   lng: number;
   distance: number | null;
@@ -51,12 +51,21 @@ export interface LocationDeatail {
   doors: Door[];
   elevators: Elevator[];
   parkings: Parking[];
-  restaurant: {
+  restaurants: {
     restaurantId: number;
     name: string;
     logoURL: string;
   }[];
   comments: CommentType[];
+}
+
+export interface LocationRestaurantDeatail extends LocationDeatail {
+  restaurantId: number;
+  restaurantName: string;
+  logoURL: string;
+  floor: string;
+  entrance: string;
+  doorType: string;
 }
 
 export interface OpenResponse {
