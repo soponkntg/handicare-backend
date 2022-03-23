@@ -32,5 +32,71 @@ export interface CommentType {
   userName: string;
   profileImageURL: string;
   message: string;
-  timestamp: string;
+  timestamp: Date;
+}
+
+export interface LocationDeatail {
+  locationId: number;
+  locationName: string;
+  category: string;
+  locationDetail: string;
+  lat: number;
+  lng: number;
+  distance: number | null;
+  rating: number;
+  images: string[];
+  openTime: OpenResponse[];
+  ramps: Ramp[];
+  toilets: Toilet[];
+  doors: Door[];
+  elevators: Elevator[];
+  parkings: Parking[];
+  restaurant: {
+    restaurantId: number;
+    name: string;
+    logoURL: string;
+  }[];
+  comments: CommentType[];
+}
+
+export interface OpenResponse {
+  day: string;
+  time: string;
+}
+
+export interface Accessibility {
+  id: number;
+  located: string;
+  remark: string;
+}
+
+export interface Ramp extends Accessibility {
+  slope: string;
+  level: number;
+  handrail: boolean;
+  floor: string;
+}
+
+export interface Toilet extends Accessibility {
+  type: string;
+  doorType: string;
+  handrail: boolean;
+  floor: string;
+}
+
+export interface Door extends Accessibility {
+  doorType: string;
+  passable: boolean;
+  floor: string;
+}
+
+export interface Elevator extends Accessibility {
+  switch: boolean;
+  passable: boolean;
+}
+
+export interface Parking extends Accessibility {
+  enoughSpace: boolean;
+  nearEntry: boolean;
+  floor: string;
 }

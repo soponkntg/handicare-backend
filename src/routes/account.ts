@@ -2,8 +2,14 @@ import express, { Request, Response } from "express";
 import accountController from "../controllers/account";
 const router = express.Router();
 
-router.post("/comment", accountController.comment);
+router.post("/location/comment", accountController.postLocationComment);
+router.get("/location/morecomments", accountController.getMoreLocationComment);
+router.post("/restaurant/comment", accountController.postRestaurantComment);
+router.get(
+  "/restaurant/morecomments",
+  accountController.getMoreRestaurantComment
+);
 router.post("/createUser", accountController.createUser);
-router.get("/comments", accountController.getAllComment)
+router.get("/comments", accountController.getAllComment);
 
 export default router;

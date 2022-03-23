@@ -1,20 +1,18 @@
 import { Request, Response } from "express";
-import { Sequelize, where } from "sequelize";
-import { Comment, Location, User } from "../models";
+import { Sequelize } from "sequelize";
+import { LocationComment, Location, User } from "../models";
 import { CommentType } from "../interface";
 import { AnyFunction } from "sequelize/types/utils";
 
-const comment = async (req: Request, res: Response) => {
-  const { userId, locationId, message, rating, timestamp } =
-    req.body as unknown as {
-      userId: string;
-      locationId: string;
-      message: string;
-      timestamp: string;
-      rating: number;
-    };
-
-  if (!userId || !locationId || !message || !timestamp) {
+const postLocationComment = async (req: Request, res: Response) => {
+  const { userId, locationId, message, rating } = req.body as unknown as {
+    userId: string;
+    locationId: string;
+    message: string;
+    rating: number;
+  };
+  const timestamp = new Date();
+  if (!userId || !locationId || !message) {
     return res.send("unsuccessful: invalid input");
   }
 
@@ -32,11 +30,11 @@ const comment = async (req: Request, res: Response) => {
     rating: rating,
   };
 
-  const cmt = await Comment.create(inp);
+  const cmt = await LocationComment.create(inp);
   console.log(cmt.toJSON());
 
   if (rating) {
-    const comments = await Comment.findAll({
+    const comments = await LocationComment.findAll({
       where: { locationId: locationId },
     });
 
@@ -63,6 +61,8 @@ const comment = async (req: Request, res: Response) => {
   res.send("success");
 };
 
+const postRestaurantComment = async (req: Request, res: Response) => {};
+
 const getAllComment = async (req: Request, res: Response) => {
   const { locationId } = req.query as unknown as { locationId: number };
   if (!locationId) {
@@ -70,7 +70,7 @@ const getAllComment = async (req: Request, res: Response) => {
   }
 
   const ret: CommentType[] = [];
-  const comments = await Comment.findAll({
+  const comments = await LocationComment.findAll({
     where: { locationId: locationId },
     order: [Sequelize.literal("timestamp DESC")],
   });
@@ -90,15 +90,22 @@ const getMoreComment = async (req: Request, res: Response) => {
   }
 
   const ret: CommentType[] = [];
-  const comments = await Comment.findAll({
-    where: { locationId: locationId },
-    order: [Sequelize.literal("timestamp DESC")],
-    offset: offset,
-    limit: 12,
-  });
+//   const comments = await Comment.findAll({
+//     where: { locationId: locationId },
+//     order: [Sequelize.literal("timestamp DESC")],
+//     offset: offset,
+//     limit: 12,
+//   });
 
-  comments.forEach( c => getCommentData(c.toJSON(), ret));
+//   comments.forEach( c => getCommentData(c.toJSON(), ret));
   res.send(JSON.stringify(ret, null, 2));
+};
+
+const getMoreLocationComment = async (req: Request, res: Response) => {
+  res.send("success");
+};
+
+const getMoreRestaurantComment = async (req: Request, res: Response) => {
   res.send("success");
 };
 
@@ -125,4 +132,11 @@ const createUser = async (req: Request, res: Response) => {
   res.send("success");
 };
 
-export default { comment, getAllComment, createUser, getMoreComment };
+export default {
+  postLocationComment,
+  postRestaurantComment,
+  getAllComment,
+  createUser,
+  getMoreLocationComment,
+  getMoreRestaurantComment,
+};
