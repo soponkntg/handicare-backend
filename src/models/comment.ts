@@ -20,14 +20,6 @@ const Comment = sequelize.define("comment", {
     type: Sequelize.STRING,
     allowNull: false,
   },
-  profileImageURL: {
-    type: Sequelize.STRING,
-    allowNull: false,
-  },
-  username: {
-    type: Sequelize.STRING,
-    allowNull: false,
-  },
 
 });
 
