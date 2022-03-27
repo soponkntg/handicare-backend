@@ -151,8 +151,7 @@ const getAllLocation = async (req: Request, res: Response) => {
     lng: number;
   };
 
-
-  console.log(lat && lng)
+  console.log(lat && lng);
   let locations;
   if (lat && lng) {
     locations = await Location.findAll({
@@ -204,7 +203,7 @@ const getAllLocation = async (req: Request, res: Response) => {
       parking: data.parkings.length > 0,
       distance: data.distance ? data.distance : null,
     };
-    console.log(ret)
+    console.log(ret);
     responds.push(ret);
   });
 
@@ -395,6 +394,104 @@ const postLocationRestaurant = async (req: Request, res: Response) => {
 
 const getMoreComment = async (req: Request, res: Response) => {};
 
+const postSearch = async (req: Request, res: Response) => {
+  const { searchQuery } = req.query as { searchQuery: string };
+  let searchRestaurants: {
+    id: number;
+    name: string;
+    locations: {
+      id: number;
+      name: string;
+    }[];
+  }[] = [];
+  let searchLocations: {
+    id: number;
+    name: string;
+  }[] = [];
+  const responds: {
+    locationId: number;
+    locationName: string;
+    restaurantId: number | null;
+    restaurantName: string | null;
+  }[] = [];
+
+  let srs = await Restaurant.findAll({
+    attributes: ["id", "name"],
+    where: {
+      [Op.or]: [
+        { name: { [Op.substring]: `${searchQuery}` } },
+        { category: { [Op.substring]: `${searchQuery}` } },
+      ],
+    },
+    include: [
+      {
+        model: Location,
+        attributes: ["id", "name"],
+        through: {
+          attributes: [],
+        },
+      },
+    ],
+  });
+  let sls = await Location.findAll({
+    attributes: ["id", "name"],
+    where: {
+      [Op.or]: [
+        { name: { [Op.substring]: `${searchQuery}` } },
+        { category: { [Op.substring]: `${searchQuery}` } },
+        { locationDetail: { [Op.substring]: `${searchQuery}` } },
+      ],
+    },
+  });
+  if (srs.length === 0 && sls.length === 0) {
+    const searchQueries = searchQuery.split(" ");
+    srs = await Restaurant.findAll({
+      attributes: ["id", "name"],
+      where: {
+        [Op.or]: createSearchOption(["name", "category"], searchQueries),
+      },
+      include: [
+        {
+          model: Location,
+          attributes: ["id", "name"],
+          through: {
+            attributes: [],
+          },
+        },
+      ],
+    });
+
+    sls = await Location.findAll({
+      attributes: ["id", "name"],
+      where: {
+        [Op.or]: createSearchOption(
+          ["name", "category", "locationDetail"],
+          searchQueries
+        ),
+      },
+    });
+  }
+  for (let sr of srs) {
+    const searchLocationRestaurant = sr.toJSON();
+    responds.push({
+      locationId: searchLocationRestaurant.locations[0].id,
+      locationName: searchLocationRestaurant.locations[0].name,
+      restaurantId: searchLocationRestaurant.id,
+      restaurantName: searchLocationRestaurant.name,
+    });
+  }
+  for (let lr of sls) {
+    const searchLocation = lr.toJSON();
+    responds.push({
+      locationId: searchLocation.id,
+      locationName: searchLocation.name,
+      restaurantId: null,
+      restaurantName: null,
+    });
+  }
+  res.send(responds);
+};
+
 const calculateDistance = (
   lat1: number,
   lng1: number,
@@ -442,6 +539,18 @@ const createCommentFormat = async (cs: any) => {
   return comments;
 };
 
+const createSearchOption = (columns: string[], searchQueries: string[]) => {
+  const queries: any = [];
+  for (let column of columns) {
+    for (let searchQuery of searchQueries) {
+      queries.push({
+        [column]: { [Op.substring]: `${searchQuery}` },
+      });
+    }
+  }
+  return queries;
+};
+
 export default {
   getRecommendLocation,
   getRecommendRestaurant,
@@ -449,4 +558,5 @@ export default {
   postLocation,
   postLocationRestaurant,
   getMoreComment,
+  postSearch,
 };
