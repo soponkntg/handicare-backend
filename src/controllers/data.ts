@@ -394,7 +394,7 @@ const postLocationRestaurant = async (req: Request, res: Response) => {
 
 const getMoreComment = async (req: Request, res: Response) => {};
 
-const postSearch = async (req: Request, res: Response) => {
+const getSearch = async (req: Request, res: Response) => {
   const { searchQuery } = req.query as { searchQuery: string };
   let searchRestaurants: {
     id: number;
@@ -558,5 +558,5 @@ export default {
   postLocation,
   postLocationRestaurant,
   getMoreComment,
-  postSearch,
+  getSearch,
 };

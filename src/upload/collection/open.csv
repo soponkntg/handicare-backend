@@ -1,4 +1,11 @@
 Location_Name,Day,Open,Open Time,Close Time
+Crystal Design Center (CDC),Monday,TRUE,9:30:00,20:00:00
+Crystal Design Center (CDC),Tuesday,TRUE,10:30:00,20:00:00
+Crystal Design Center (CDC),Wendesday,TRUE,9:30:00,20:00:00
+Crystal Design Center (CDC),Thursday,TRUE,9:30:00,20:00:00
+Crystal Design Center (CDC),Friday,TRUE,9:30:00,20:00:00
+Crystal Design Center (CDC),Saturday,TRUE,9:30:00,21:00:00
+Crystal Design Center (CDC),Sunday,TRUE,9:30:00,21:00:00
 The Commons Thonglor,Monday,TRUE,8:00:00,24:00:00
 The Commons Thonglor,Tuesday,TRUE,8:00:00,24:00:00
 The Commons Thonglor,Wendesday,TRUE,8:00:00,24:00:00
