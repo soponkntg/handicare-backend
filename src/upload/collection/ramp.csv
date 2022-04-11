@@ -2,8 +2,12 @@ Location_Name,Slope,Level,Handrail,Located,Floor,Remark
 Crystal Design Center (CDC),Low,1,FALSE,zone i j1,1,
 Crystal Design Center (CDC),Medium,1,FALSE,zone j1 j2,1,
 Crystal Design Center (CDC),Low,1,FALSE,zone j2 k5,1,
+J Avenue,Low,1,FALSE,zone starbucks,1,
 The Commons Thonglor,Low,1,FALSE,Near lift,3,Rough surface
 The Commons Thonglor,Low,1,FALSE,Bun sik,1,Disconnect
 The Commons Thonglor,Low,1,FALSE,Bar naan,1,Disconnect
 The Commons Thonglor,Medium,2,FALSE,Front,M,Rough surface
 The Commons Thonglor,Medium,1,FALSE,Parking,P,
+Market Place Thonglor,Low,1,FALSE,Parking 2nd floor,2,Sligtly Slope
+Market Place Thonglor,Low,1,FALSE,Villa Market,G,
+Market Place Thonglor,Medium,1,FALSE,KOF,G,May have an obstacle

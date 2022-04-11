@@ -1,3 +1,4 @@
+import S3, { ManagedUpload } from "aws-sdk/clients/s3";
 import fs from "fs";
 import csv from "csv-parser";
 import path from "path";
@@ -11,7 +12,11 @@ import {
   Elevator,
   Parking,
   Ramp,
+  LocationImage,
 } from "../models/index";
+import dotenv from "dotenv";
+dotenv.config();
+
 const locationsData: any = [];
 const opensData: any = [];
 const locationRestaurantsData: any = [];
@@ -33,6 +38,8 @@ export const storeData = async () => {
         lat: +row["Lat"],
         lng: +row["Lng"],
         locationDetail: row["Location Detail"],
+        contact: row["Contact"],
+        imageURL: row["Image URL"],
         remark: row["Remarks"],
       };
       locationsData.push(data);
@@ -53,6 +60,7 @@ export const storeData = async () => {
             doorType: row["Door Type"],
             located: row["Located"],
             floor: row["Floor"],
+            contact: row["Contact"],
             imagesURL: row["Images URL"],
             remark: row["Remark"],
             logoURL: row["Logo URL"],
@@ -329,6 +337,8 @@ export const storeData = async () => {
                                           located:
                                             locationRestaurantData.located,
                                           floor: locationRestaurantData.floor,
+                                          contact:
+                                            locationRestaurantData.contact,
                                           count: locationRestaurantData.count,
                                           level: mapLevel(
                                             locationRestaurantData.level
@@ -363,5 +373,66 @@ const toBoolean = (input: string) => {
     return true;
   } else {
     return false;
+  }
+};
+
+export const storeImage = async () => {
+  const bucketName = process.env.AWS_BUCKET_NAME || "";
+  const region = process.env.AWS_BUCKET_REGION;
+  const accessKeyId = process.env.AWS_ACCESS_KEY;
+  const secretAccessKey = process.env.AWS_SECRET_KEY;
+  const s3 = new S3({
+    region,
+    accessKeyId,
+    secretAccessKey,
+  });
+
+  const imageFolders = [
+    "Crystal Design Center (CDC)",
+    "The Commons Thonglor",
+    "J Avenue",
+    "Market Place Thonglor",
+    "Suanplern Market",
+  ];
+  for (let folders of imageFolders) {
+    const directoryPath = path.join(__dirname, `collection/images/${folders}`);
+    console.log(directoryPath);
+    let index = 1;
+    //passsing directoryPath and callback function
+    const imagesURL = [];
+    const l = await Location.findOne({ where: { name: folders } });
+    const location = l?.toJSON();
+    fs.readdir(directoryPath, async (err, files) => {
+      //handling error
+      if (err) {
+        return console.log("Unable to scan directory: " + err);
+      }
+      //listing all files using forEach
+      for (let file of files) {
+        // Do whatever you want to do with the file
+        const imageDirectoryPath = path.join(
+          __dirname,
+          `collection/images/${folders}/${file}`
+        );
+        if (imageDirectoryPath.includes(".DS_Store")) {
+          continue;
+        }
+        console.log(imageDirectoryPath);
+
+        const fileStream = fs.createReadStream(imageDirectoryPath);
+        const result = await s3
+          .upload({
+            Bucket: bucketName,
+            Body: fileStream,
+            Key: `${folders.toLowerCase().replace(" ", "-") + index++}.jpg`,
+            ContentType: "image/jpeg",
+          })
+          .promise();
+        await LocationImage.create({
+          imageURL: result.Location,
+          locationId: location.id,
+        });
+      }
+    });
   }
 };

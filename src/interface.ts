@@ -40,6 +40,7 @@ export interface LocationDeatail {
   locationName: string;
   category: string;
   located: string;
+  contact: string;
   lat: number;
   lng: number;
   distance: number | null;

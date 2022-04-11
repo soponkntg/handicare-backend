@@ -16,6 +16,9 @@ const LocationRestaurant = sequelize.define("location_restaurant", {
     type: Sequelize.STRING,
     allowNull: false,
   },
+  contact: {
+    type: Sequelize.STRING,
+  },
   count: {
     type: Sequelize.INTEGER,
     defaultValue: 0,

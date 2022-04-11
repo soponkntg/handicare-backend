@@ -22,7 +22,6 @@ import {
   CommentType,
   LocationRestaurantDeatail,
 } from "../interface";
-import sequelize from "../database";
 
 const getRecommendLocation = async (req: Request, res: Response) => {
   const responds: LocationType[] = [];
@@ -245,7 +244,10 @@ const postLocation = async (req: Request, res: Response) => {
         model: Toilet,
         attributes: { exclude: ["createdAt", "updatedAt"] },
       },
-      LocationImage,
+      {
+        model: LocationImage,
+        attributes: { exclude: ["createdAt", "updatedAt"] },
+      },
       {
         model: Restaurant,
         attributes: [["id", "restaurantId"], "name", "logoURL"],
@@ -272,6 +274,7 @@ const postLocation = async (req: Request, res: Response) => {
     locationName: location.name,
     category: location.category,
     located: location.locationDetail,
+    contact: location.contact,
     lat: location.lat,
     lng: location.lng,
     distance:
@@ -359,6 +362,7 @@ const postLocationRestaurant = async (req: Request, res: Response) => {
     restaurantName: restaurant.name,
     logoURL: restaurant.logoURL,
     floor: locationRestaurant.floor,
+    contact: locationRestaurant.contact,
     locationId: location.id,
     locationName: location.name,
     category: restaurant.category,

@@ -11,7 +11,7 @@ import LocationRestaurant from "./locationRestaurant";
 import User from "./user";
 import LocationComment from "./locationComment";
 import LocationRestaurantComment from "./LocationRestaurantComment";
-import { storeData } from "../upload/upload";
+import { storeData, storeImage } from "../upload/upload";
 import sequelize from "../database";
 
 export {
@@ -69,6 +69,7 @@ export const initDB = () => {
     .then((result: any) => {
       // console.log(result);
       // storeData();
+      // storeImage();
     })
     .catch((err: any) => {
       console.log(err);

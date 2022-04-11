@@ -1,19 +1,6 @@
 import Sequelize from "sequelize";
 import sequelize from "../database";
 
-// class Location extends Model {
-//   declare id: number;
-//   declare name: string;
-//   declare category: string;
-//   declare googleMap: string;
-//   declare locationDetail: string;
-//   declare lat: string;
-//   declare lng: string;
-//   declare count:number;
-//   declare rateAverage:number;
-//   declare imageURL:string;
-//   declare remark: string ;
-// }
 const Location = sequelize.define("location", {
   id: {
     type: Sequelize.INTEGER,
@@ -36,6 +23,9 @@ const Location = sequelize.define("location", {
   locationDetail: {
     type: Sequelize.STRING,
     allowNull: false,
+  },
+  contact: {
+    type: Sequelize.STRING,
   },
   lat: {
     type: Sequelize.DOUBLE,
