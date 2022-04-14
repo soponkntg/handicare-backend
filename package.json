@@ -19,7 +19,7 @@
     "express": "^4.17.3",
     "fs": "^0.0.1-security",
     "mysql2": "^2.3.3",
-    "sequelize": "^6.17.0",
+    "sequelize": "^6.19.0",
     "typescript": "^4.5.5"
   },
   "name": "handicare",

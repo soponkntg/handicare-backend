@@ -142,54 +142,30 @@ const getRecommendRestaurant = async (req: Request, res: Response) => {
   }
   res.send(responds);
 };
-const getAllLocation = async (req: Request, res: Response) => {
-  let responds: LocationType[] = [];
 
+const getAllLocation = async (req: Request, res: Response) => {
+  const responds: LocationType[] = [];
   const { lat, lng } = req.query as unknown as {
     lat: number;
     lng: number;
   };
-
-  console.log(lat && lng);
-  let locations;
-  if (lat && lng) {
-    locations = await Location.findAll({
-      attributes: [
-        "id",
-        "name",
-        "imageURL",
-        "lat",
-        "lng",
-        [
-          Sequelize.literal(
-            `sqrt(power(lat-${lat}, 2) + power(lng-${lng}, 2))`
-          ),
-          "distance",
-        ],
-      ],
-      where: {
-        category: {
-          [Op.not]: "restaurant",
-        },
+  const existLatLng = lat && lng ? true : false;
+  const locations = await Location.findAll({
+    attributes: ["id", "name", "imageURL", "lat", "lng"],
+    where: {
+      category: {
+        [Op.not]: "restaurant",
       },
-      include: [Ramp, Elevator, Parking, Toilet, Door],
-      order: [Sequelize.literal("distance"), "name"],
-    });
-  } else {
-    locations = await Location.findAll({
-      attributes: ["id", "name", "imageURL", "lat", "lng"],
-      where: {
-        category: {
-          [Op.not]: "restaurant",
-        },
-      },
-      include: [Ramp, Elevator, Parking, Toilet, Door],
-      order: ["name"],
-    });
-  }
+    },
+    include: [Ramp, Elevator, Parking, Toilet, Door],
+    order: ["name"],
+  });
 
   locations.forEach((location) => {
     const data = location.toJSON();
+    const distance = existLatLng
+      ? calculateDistance(lat, lng, data.lat, data.lng)
+      : null;
 
     const ret: LocationType = {
       locationID: data.id,
@@ -197,16 +173,23 @@ const getAllLocation = async (req: Request, res: Response) => {
       placeImage: data.imageURL,
       ramp: data.ramps.length > 0,
       toilet: data.toilets.length > 0,
-      elevator: data.elevators.length > 0,
-      door: data.doors.length > 0,
-      parking: data.parkings.length > 0,
-      distance: data.distance ? data.distance : null,
+       elevator: data.elevators.length > 0,
+       door: data.doors.length > 0,
+       parking: data.parkings.length > 0,
+       distance: distance,
     };
-    console.log(ret);
     responds.push(ret);
   });
 
+  if (existLatLng) {
+    responds.sort((a, b) => {
+      if (a.distance && b.distance) return a.distance - b.distance;
+      else return 0;
+    });
+  }
+
   const response = JSON.stringify(responds, null, 2);
+  console.log(response);
   res.send(response);
 };
 
