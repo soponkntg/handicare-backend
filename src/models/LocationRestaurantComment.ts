@@ -15,7 +15,7 @@ const LocationRestaurantComment = sequelize.define(
       allowNull: false,
     },
     rating: {
-      type: Sequelize.STRING,
+      type: Sequelize.DOUBLE,
       allowNull: true,
     },
     timestamp: {

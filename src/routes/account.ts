@@ -10,7 +10,7 @@ router.post(
 );
 router.get(
   "/restaurant/morecomments",
-  accountController.getMoreRestaurantComment
+  accountController.getMoreLocationRestaurantComment
 );
 router.post("/createUser", accountController.createUser);
 

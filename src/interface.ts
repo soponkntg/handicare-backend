@@ -14,17 +14,8 @@ export interface LocationType {
 }
 
 export interface RestaurantType extends LocationType {
-  locationID: number;
-  locationtionName: string;
   restaurantID: number | null;
   restaurantName: string | null;
-  placeImage: string;
-  ramp: boolean;
-  toilet: boolean;
-  elevator: boolean;
-  door: boolean;
-  parking: boolean;
-  distance: number | null;
 }
 
 export interface CommentType {
@@ -32,17 +23,16 @@ export interface CommentType {
   userName: string;
   profileImageURL: string;
   message: string;
+  rating: number;
   timestamp: Date;
 }
 
-export interface LocationDeatail {
+export interface LocationDetail {
   locationId: number;
   locationName: string;
   category: string;
   located: string;
   contact: string;
-  lat: number;
-  lng: number;
   distance: number | null;
   rating: number;
   images: string[];
@@ -60,9 +50,10 @@ export interface LocationDeatail {
   comments: CommentType[];
 }
 
-export interface LocationRestaurantDeatail extends LocationDeatail {
+export interface LocationRestaurantDetail extends LocationDetail {
   restaurantId: number;
   restaurantName: string;
+  restaurantLocated: string;
   logoURL: string;
   floor: string;
   entrance: string;

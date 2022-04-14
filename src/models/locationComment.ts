@@ -13,7 +13,7 @@ const LocationComment = sequelize.define("location_comment", {
     allowNull: false,
   },
   rating: {
-    type: Sequelize.STRING,
+    type: Sequelize.DOUBLE,
     allowNull: true,
   },
   timestamp: {
