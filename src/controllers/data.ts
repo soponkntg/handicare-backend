@@ -212,7 +212,7 @@ const getAllLocation = async (
       });
     }
 
-    locations.forEach((location) => {
+    locations.forEach((location: any) => {
       const data = location.toJSON();
 
       const ret: LocationType = {
