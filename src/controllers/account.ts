@@ -229,13 +229,17 @@ const createUser = async (req: Request, res: Response, next: NextFunction) => {
       return res.send("invalid input");
     }
     console.log(id, username, profileImageURL, email);
+    const user = await User.findOne({ where: { id: id } });
+    if (user) {
+      return res.send("user already existed")
+    }
     await User.create({
       id: id,
       username: username,
       profileImageURL: profileImageURL,
       email: email,
     });
-    res.send("success");
+    return res.send("success");
   } catch (e) {
     console.log(e);
     next(e);
