@@ -12,6 +12,6 @@ router.get(
   "/restaurant/morecomments",
   accountController.getMoreLocationRestaurantComment
 );
-router.post("/createUser", accountController.createUser);
+router.post("/user", accountController.createUser);
 
 export default router;
