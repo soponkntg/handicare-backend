@@ -32,6 +32,7 @@ export interface LocationDetail {
   locationName: string;
   category: string;
   located: string;
+  googleMap: string;
   contact: string;
   distance: number | null;
   rating: number;

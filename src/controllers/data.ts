@@ -281,6 +281,7 @@ const postLocation = async (
       locationName: location.name,
       category: location.category,
       located: location.locationDetail,
+      googleMap: location.googleMap,
       contact: location.contact,
       distance:
         lat && lng
@@ -382,6 +383,7 @@ const postLocationRestaurant = async (
       locationName: location.name,
       category: restaurant.category,
       located: location.locationDetail,
+      googleMap: location.googleMap,
       restaurantLocated: locationRestaurant.located,
       distance:
         lat && lng
