@@ -419,23 +419,24 @@ const postLocationRestaurant = async (
 const getSearch = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { searchQuery } = req.query as { searchQuery: string };
-    let searchRestaurants: {
-      id: number;
-      name: string;
-      locations: {
-        id: number;
-        name: string;
-      }[];
-    }[] = [];
-    let searchLocations: {
-      id: number;
-      name: string;
-    }[] = [];
+    // let searchRestaurants: {
+    //   id: number;
+    //   name: string;
+    //   locations: {
+    //     id: number;
+    //     name: string;
+    //   }[];
+    // }[] = [];
+    // let searchLocations: {
+    //   id: number;
+    //   name: string;
+    // }[] = [];
     const responds: {
       locationId: number;
       locationName: string;
       restaurantId: number | null;
       restaurantName: string | null;
+      imageURL: string;
     }[] = [];
 
     let srs = await Restaurant.findAll({
@@ -469,7 +470,7 @@ const getSearch = async (req: Request, res: Response, next: NextFunction) => {
     if (srs.length === 0 && sls.length === 0) {
       const searchQueries = searchQuery.split(" ");
       srs = await Restaurant.findAll({
-        attributes: ["id", "name"],
+        attributes: ["id", "name", "logoURL"],
         where: {
           [Op.or]: createSearchOption(["name", "category"], searchQueries),
         },
@@ -485,7 +486,7 @@ const getSearch = async (req: Request, res: Response, next: NextFunction) => {
       });
 
       sls = await Location.findAll({
-        attributes: ["id", "name"],
+        attributes: ["id", "name", "imageURL"],
         where: {
           [Op.or]: createSearchOption(
             ["name", "category", "locationDetail"],
@@ -501,6 +502,7 @@ const getSearch = async (req: Request, res: Response, next: NextFunction) => {
         locationName: searchLocationRestaurant.locations[0].name,
         restaurantId: searchLocationRestaurant.id,
         restaurantName: searchLocationRestaurant.name,
+        imageURL: searchLocationRestaurant.logoURL,
       });
     }
     for (let lr of sls) {
@@ -510,6 +512,7 @@ const getSearch = async (req: Request, res: Response, next: NextFunction) => {
         locationName: searchLocation.name,
         restaurantId: null,
         restaurantName: null,
+        imageURL: searchLocation.imageURL,
       });
     }
     res.send(responds);
