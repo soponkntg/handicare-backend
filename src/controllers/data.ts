@@ -229,31 +229,31 @@ const postLocation = async (
         id: locationId,
       },
       include: [
-        Open,
-        {
-          model: Door,
-          attributes: { exclude: ["createdAt", "updatedAt"] },
-        },
-        {
-          model: Elevator,
-          attributes: { exclude: ["createdAt", "updatedAt"] },
-        },
-        {
-          model: Parking,
-          attributes: { exclude: ["createdAt", "updatedAt"] },
-        },
-        {
-          model: Ramp,
-          attributes: { exclude: ["createdAt", "updatedAt"] },
-        },
-        {
-          model: Toilet,
-          attributes: { exclude: ["createdAt", "updatedAt"] },
-        },
-        {
-          model: LocationImage,
-          attributes: ["imageURL"],
-        },
+        //     Open,
+        //     {
+        //       model: Door,
+        //       attributes: { exclude: ["createdAt", "updatedAt"] },
+        //     },
+        //     {
+        //       model: Elevator,
+        //       attributes: { exclude: ["createdAt", "updatedAt"] },
+        //     },
+        //     {
+        //       model: Parking,
+        //       attributes: { exclude: ["createdAt", "updatedAt"] },
+        //     },
+        //     {
+        //       model: Ramp,
+        //       attributes: { exclude: ["createdAt", "updatedAt"] },
+        //     },
+        //     {
+        //       model: Toilet,
+        //       attributes: { exclude: ["createdAt", "updatedAt"] },
+        //     },
+        //     {
+        //       model: LocationImage,
+        //       attributes: ["imageURL"],
+        //     },
         {
           model: Restaurant,
           attributes: [["id", "restaurantId"], "name", "logoURL"],
@@ -264,8 +264,57 @@ const postLocation = async (
         },
       ],
     });
-    const location = l?.toJSON();
 
+    const ops = await Open.findAll({
+      where: {
+        locationId: locationId,
+      },
+    });
+    const ds = await Door.findAll({
+      where: {
+        locationId: locationId,
+      },
+      attributes: { exclude: ["createdAt", "updatedAt"] },
+    });
+    const es = await Elevator.findAll({
+      where: {
+        locationId: locationId,
+      },
+      attributes: { exclude: ["createdAt", "updatedAt"] },
+    });
+    const ps = await Parking.findAll({
+      where: {
+        locationId: locationId,
+      },
+      attributes: { exclude: ["createdAt", "updatedAt"] },
+    });
+    const rs = await Ramp.findAll({
+      where: {
+        locationId: locationId,
+      },
+      attributes: { exclude: ["createdAt", "updatedAt"] },
+    });
+    const ts = await Toilet.findAll({
+      where: {
+        locationId: locationId,
+      },
+      attributes: { exclude: ["createdAt", "updatedAt"] },
+    });
+    const lms = await LocationImage.findAll({
+      where: {
+        locationId: locationId,
+      },
+      attributes: ["imageURL"],
+    });
+
+    const location = l?.toJSON();
+    const opens = ops.map((op) => op.toJSON());
+    const doors = ds.map((d) => d.toJSON());
+    const elevators = es.map((e) => e.toJSON());
+    const parkings = ps.map((p) => p.toJSON());
+    const ramps = rs.map((r) => r.toJSON());
+    const toilets = ts.map((t) => t.toJSON());
+    const location_images = lms.map((lm) => lm.toJSON());
     //query location comment
     const locationComments = await LocationComment.findAll({
       attributes: { exclude: ["id"] },
@@ -288,15 +337,15 @@ const postLocation = async (
           ? calculateDistance(lat, lng, location.lat, location.lng)
           : null,
       rating: location.rateAverage,
-      images: location.location_images.map((image: any) => {
+      images: location_images.map((image: any) => {
         return image.imageURL;
       }),
-      openTime: creatOpentimeFormat(location.opens),
-      ramps: location.ramps,
-      toilets: location.toilets,
-      doors: location.doors,
-      elevators: location.elevators,
-      parkings: location.parkings,
+      openTime: creatOpentimeFormat(opens),
+      ramps: ramps,
+      toilets: toilets,
+      doors: doors,
+      elevators: elevators,
+      parkings: parkings,
       restaurants: location.restaurants,
       comments: comments,
     };
