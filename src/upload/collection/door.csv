@@ -1,7 +1,24 @@
 Location_Name,Door Type,Passable,Located,Floor,Remark
-Crystal Design Center (CDC),No door,TRUE,,,
+Crystal Design Center (CDC),Open entrance,TRUE,,1,
 The Commons Thonglor,Push pull,TRUE,The Lobster Lab,M,
 The Commons Thonglor,Auto slide,TRUE,Front market,M,
-J Avenue,No door,TRUE,,,
-Market Place Thonglor,No door,TRUE,,,
-Suanplern Market,No door,TRUE,,,
+J Avenue,Open entrance,TRUE,,1,
+Market Place Thonglor,Open entrance,TRUE,,1,
+Suanplern Market,Open entrance,TRUE,,1,
+Tha Maharaj,Open entrance,TRUE,,1,
+Lido Connect,Push pull,TRUE,Rama 1 road entrance,1,Gate 1
+Lido Connect,Push pull,TRUE,Rama 1 road entrance,1,Gate 2
+Lido Connect,Push pull,TRUE,Siam soi 3 entrance,1,Gate 3
+Lido Connect,Push pull,TRUE,Siam soi 3 entrance,1,Gate 4
+Lido Connect,Push pull,TRUE,Siam soi 3 entrance,1,Gate 5
+Lido Connect,Push pull,TRUE,Siam soi 7 entrance,1,Gate 6
+Lido Connect,Push pull,TRUE,Siam soi 2 entrance,1,Gate 7
+Lido Connect,Auto slide,TRUE,Siam soi 2 entrance,1,Gate 8
+Centerpoint Siam Square,Auto slide,TRUE,Siam soi 7 entrance,1,
+Centerpoint Siam Square,Auto slide,FALSE,Siam One entrance,1,Stairs between the entrance
+Centerpoint Siam Square,Auto slide,TRUE,Siam soi 3 entrance,1,
+Centerpoint Siam Square,Auto slide,TRUE,Rama 1 road entrance,1,
+Centerpoint Siam Square,Auto slide,TRUE,Bts entrance,3,
+Ohkajhu Organic Farm,Auto slide,TRUE,Siam soi 2,1,
+Hint,Push pull,TRUE,In front of cafe,1,
+Krua Khun Kung,Push pull,TRUE,In front of restaurant,1,

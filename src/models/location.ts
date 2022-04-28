@@ -44,7 +44,7 @@ const Location = sequelize.define("location", {
     defaultValue: 0,
   },
   imageURL: {
-    type: Sequelize.STRING,
+    type: Sequelize.STRING(10000),
     // allowNull: false,
   },
   remark: {

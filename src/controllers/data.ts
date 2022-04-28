@@ -489,7 +489,7 @@ const getSearch = async (req: Request, res: Response, next: NextFunction) => {
     }[] = [];
 
     let srs = await Restaurant.findAll({
-      attributes: ["id", "name"],
+      attributes: ["id", "name", "logoURL"],
       where: {
         [Op.or]: [
           { name: { [Op.substring]: `${searchQuery}` } },
@@ -507,12 +507,11 @@ const getSearch = async (req: Request, res: Response, next: NextFunction) => {
       ],
     });
     let sls = await Location.findAll({
-      attributes: ["id", "name"],
+      attributes: ["id", "name", "imageURL"],
       where: {
         [Op.or]: [
           { name: { [Op.substring]: `${searchQuery}` } },
           { category: { [Op.substring]: `${searchQuery}` } },
-          { locationDetail: { [Op.substring]: `${searchQuery}` } },
         ],
       },
     });
@@ -537,10 +536,7 @@ const getSearch = async (req: Request, res: Response, next: NextFunction) => {
       sls = await Location.findAll({
         attributes: ["id", "name", "imageURL"],
         where: {
-          [Op.or]: createSearchOption(
-            ["name", "category", "locationDetail"],
-            searchQueries
-          ),
+          [Op.or]: createSearchOption(["name", "category"], searchQueries),
         },
       });
     }

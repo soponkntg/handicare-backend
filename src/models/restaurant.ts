@@ -17,7 +17,7 @@ const Restaurant = sequelize.define("restaurant", {
     allowNull: false,
   },
   logoURL: {
-    type: Sequelize.STRING,
+    type: Sequelize.STRING(10000),
     // allowNull: false,
   },
 });

@@ -20,6 +20,13 @@ J Avenue,Thursday,TRUE,10:00:00,20:00:00
 J Avenue,Friday,TRUE,10:00:00,20:00:00
 J Avenue,Saturday,TRUE,10:00:00,20:00:00
 J Avenue,Sunday,TRUE,10:00:00,20:00:00
+The Twenty Six,Monday,TRUE,10:00:00,20:00:00
+The Twenty Six,Tuesday,TRUE,10:00:00,20:00:00
+The Twenty Six,Wendesday,TRUE,10:00:00,20:00:00
+The Twenty Six,Thursday,TRUE,10:00:00,20:00:00
+The Twenty Six,Friday,TRUE,10:00:00,20:00:00
+The Twenty Six,Saturday,TRUE,10:00:00,20:00:00
+The Twenty Six,Sunday,FALSE,,
 Market Place Thonglor,Monday,TRUE,6:30:00,22:00:00
 Market Place Thonglor,Tuesday,TRUE,6:30:00,22:00:00
 Market Place Thonglor,Wendesday,TRUE,6:30:00,22:00:00
@@ -34,3 +41,45 @@ Suanplern Market,Thursday,TRUE,10:00:00,22:00:00
 Suanplern Market,Friday,TRUE,10:00:00,22:00:00
 Suanplern Market,Saturday,TRUE,10:00:00,22:00:00
 Suanplern Market,Sunday,TRUE,10:00:00,22:00:00
+Tha Maharaj,Monday,TRUE,10:00:00,21:00:00
+Tha Maharaj,Tuesday,TRUE,10:00:00,21:00:00
+Tha Maharaj,Wendesday,TRUE,10:00:00,21:00:00
+Tha Maharaj,Thursday,TRUE,10:00:00,21:00:00
+Tha Maharaj,Friday,TRUE,10:00:00,21:00:00
+Tha Maharaj,Saturday,TRUE,10:00:00,21:00:00
+Tha Maharaj,Sunday,TRUE,10:00:00,21:00:00
+Lido Connect,Monday,TRUE,10:00:00,22:00:00
+Lido Connect,Tuesday,TRUE,10:00:00,22:00:00
+Lido Connect,Wendesday,TRUE,10:00:00,22:00:00
+Lido Connect,Thursday,TRUE,10:00:00,22:00:00
+Lido Connect,Friday,TRUE,10:00:00,22:00:00
+Lido Connect,Saturday,TRUE,10:00:00,22:00:00
+Lido Connect,Sunday,TRUE,10:00:00,22:00:00
+Centerpoint Siam Square,Monday,TRUE,10:00:00,22:00:00
+Centerpoint Siam Square,Tuesday,TRUE,10:00:00,22:00:00
+Centerpoint Siam Square,Wendesday,TRUE,10:00:00,22:00:00
+Centerpoint Siam Square,Thursday,TRUE,10:00:00,22:00:00
+Centerpoint Siam Square,Friday,TRUE,10:00:00,22:00:00
+Centerpoint Siam Square,Saturday,TRUE,10:00:00,22:00:00
+Centerpoint Siam Square,Sunday,TRUE,10:00:00,22:00:00
+Ohkajhu Organic Farm,Monday,TRUE,10:00:00,20:00:00
+Ohkajhu Organic Farm,Tuesday,TRUE,10:00:00,20:00:00
+Ohkajhu Organic Farm,Wendesday,TRUE,10:00:00,20:00:00
+Ohkajhu Organic Farm,Thursday,TRUE,10:00:00,20:00:00
+Ohkajhu Organic Farm,Friday,TRUE,10:00:00,20:00:00
+Ohkajhu Organic Farm,Saturday,TRUE,10:00:00,20:00:00
+Ohkajhu Organic Farm,Sunday,TRUE,10:00:00,20:00:00
+Hint,Monday,FALSE,,
+Hint,Tuesday,TRUE,9:30:00,17:30:00
+Hint,Wendesday,TRUE,9:30:00,17:30:00
+Hint,Thursday,TRUE,9:30:00,17:30:00
+Hint,Friday,TRUE,9:30:00,17:30:00
+Hint,Saturday,TRUE,9:30:00,17:30:00
+Hint,Sunday,TRUE,9:30:00,17:30:00
+Krua Khun Kung,Monday,TRUE,11:00:00,22:00:00
+Krua Khun Kung,Tuesday,TRUE,11:00:00,22:00:00
+Krua Khun Kung,Wendesday,TRUE,11:00:00,22:00:00
+Krua Khun Kung,Thursday,TRUE,11:00:00,22:00:00
+Krua Khun Kung,Friday,TRUE,11:00:00,22:00:00
+Krua Khun Kung,Saturday,TRUE,11:00:00,22:00:00
+Krua Khun Kung,Sunday,TRUE,11:00:00,22:00:00

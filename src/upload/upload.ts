@@ -62,6 +62,7 @@ export const storeData = async () => {
             floor: row["Floor"],
             contact: row["Contact"],
             imagesURL: row["Images URL"],
+            logoURL: row["LogoURL"],
             remark: row["Remark"],
           };
           locationRestaurantsData.push(data);
@@ -326,6 +327,8 @@ export const storeData = async () => {
                                           name: locationRestaurantData.name,
                                           category:
                                             locationRestaurantData.category,
+                                          logoURL:
+                                            locationRestaurantData.logoURL,
                                         });
                                       }
                                       const locationRestaurant =
@@ -391,6 +394,12 @@ export const storeImage = async () => {
     "J Avenue",
     "Market Place Thonglor",
     "Suanplern Market",
+    "Tha Maharaj",
+    "Lido Connect",
+    "Centerpoint Siam Square",
+    "Ohkhaju Organic Farm",
+    "Hint",
+    "Krua Khun Kung",
   ];
   for (let folders of imageFolders) {
     const directoryPath = path.join(__dirname, `collection/images/${folders}`);

@@ -32,7 +32,7 @@ const LocationRestaurant = sequelize.define("location_restaurant", {
     allowNull: false,
   },
   imagesURL: {
-    type: Sequelize.STRING,
+    type: Sequelize.STRING(50000),
     allowNull: false,
   },
   remark: {
