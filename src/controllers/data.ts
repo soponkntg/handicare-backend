@@ -170,11 +170,6 @@ const getAllLocation = async (req: Request, res: Response) => {
   const existLatLng = lat && lng ? true : false;
   const locations = await Location.findAll({
     attributes: ["id", "name", "imageURL", "lat", "lng"],
-    where: {
-      category: {
-        [Op.not]: "restaurant",
-      },
-    },
     include: [Ramp, Elevator, Parking, Toilet, Door],
     order: ["name"],
   });
@@ -207,7 +202,7 @@ const getAllLocation = async (req: Request, res: Response) => {
   }
 
   const response = JSON.stringify(responds, null, 2);
-  console.log(response);
+  // console.log(response);
   res.send(response);
 };
 
@@ -411,7 +406,7 @@ const postLocationRestaurant = async (
     const restaurant = r?.toJSON();
     const location = restaurant.locations[0];
     const locationRestaurant = location.location_restaurant;
-    console.log(location);
+    // console.log(location);
     //query locationrestaurant comment
     const locationRestuarantComments = await LocationRestaurantComment.findAll({
       attributes: { exclude: ["id"] },
@@ -604,6 +599,7 @@ const createCommentFormat = async (cs: any) => {
   return comments;
 };
 
+//making OR for each category and split query
 const createSearchOption = (columns: string[], searchQueries: string[]) => {
   const queries: any = [];
   for (let column of columns) {

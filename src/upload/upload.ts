@@ -397,7 +397,7 @@ export const storeImage = async () => {
     "Tha Maharaj",
     "Lido Connect",
     "Centerpoint Siam Square",
-    "Ohkhaju Organic Farm",
+    "Ohkajhu Organic Farm",
     "Hint",
     "Krua Khun Kung",
   ];

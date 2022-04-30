@@ -42,7 +42,7 @@ const postLocationComment = async (
     };
 
     const cmt = await LocationComment.create(inp);
-    console.log(cmt.toJSON());
+    // console.log(cmt.toJSON());
 
     if (rating) {
       const rateAverage = await LocationComment.findOne({
@@ -84,7 +84,7 @@ const postLocationRestaurantComment = async (
       return res.send("unsuccessful: invalid input");
     }
 
-    console.log(userId, locationId, restaurantId, message, rating);
+    // console.log(userId, locationId, restaurantId, message, rating);
 
     const user = await User.findOne({ where: { id: userId } });
     if (user == null) return res.send("invalid user id");
@@ -105,7 +105,7 @@ const postLocationRestaurantComment = async (
     };
 
     const cmt = await LocationRestaurantComment.create(inp);
-    console.log(cmt.toJSON());
+    // console.log(cmt.toJSON());
 
     if (rating) {
       const rateAverage = await LocationRestaurantComment.findOne({
@@ -228,10 +228,10 @@ const createUser = async (req: Request, res: Response, next: NextFunction) => {
     if (!id || !username || !profileImageURL || !email) {
       return res.send("invalid input");
     }
-    console.log(id, username, profileImageURL, email);
+    // console.log(id, username, profileImageURL, email);
     const user = await User.findOne({ where: { id: id } });
     if (user) {
-      return res.send("user already existed")
+      return res.send("user already existed");
     }
     await User.create({
       id: id,
