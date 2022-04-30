@@ -2,7 +2,7 @@
   "scripts": {
     "start": "node dist/app.js",
     "start:dev": "nodemon ./src/app.ts",
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "jest",
     "build": "tsc"
   },
   "dependencies": {
@@ -32,7 +32,10 @@
   "license": "ISC",
   "description": "",
   "devDependencies": {
+    "@types/jest": "^27.1.4",
     "@types/uuid": "^8.3.4",
-    "nodemon": "^2.0.15"
+    "jest": "^27.1.4",
+    "nodemon": "^2.0.15",
+    "ts-jest": "^27.1.4"
   }
 }
