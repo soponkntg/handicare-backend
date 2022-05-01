@@ -8,7 +8,6 @@ import {
   LocationRestaurantComment,
 } from "../models";
 import { CommentType } from "../interface";
-import { nextTick } from "process";
 
 const postLocationComment = async (
   req: Request,
@@ -219,27 +218,61 @@ const getCommentData = async (data: any, ret: CommentType[]) => {
 
 const createUser = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const { id, username, profileImageURL, email } = req.body as unknown as {
-      id: string;
-      username: string;
-      profileImageURL: string;
-      email: string;
-    };
-    if (!id || !username || !profileImageURL || !email) {
+    const { id, username, profileImageURL, loginOption } =
+      req.body as unknown as {
+        id: string;
+        username: string;
+        profileImageURL: string;
+        loginOption: "apple" | "google" | "facebook";
+      };
+    if (!id || !loginOption) {
       return res.send("invalid input");
     }
-    // console.log(id, username, profileImageURL, email);
-    const user = await User.findOne({ where: { id: id } });
-    if (user) {
-      return res.send("user already existed");
+
+    if (loginOption === "apple") {
+      const user = await User.findOne({ where: { id: id } });
+
+      if (user) {
+        return res.send({
+          username: user.toJSON().username,
+          profileImageURL: "undefined",
+        });
+      }
+
+      const appleUser = await User.create({
+        id: id,
+        username: username,
+        profileImageURL: "",
+        loginOption: loginOption,
+      });
+
+      return res.send({
+        username: appleUser.toJSON().username,
+        profileImageURL: "undefined",
+      });
+    } else {
+
+      const user = await User.findOne({ where: { id: id } });
+
+      if (user) {
+        return res.send({
+          username: user.toJSON().username,
+          profileImageURL: user.toJSON().profileImageURL,
+        });
+      }
+      
+      const regularUser = await User.create({
+        id: id,
+        username: username,
+        profileImageURL: profileImageURL,
+        loginOption: loginOption,
+      });
+
+      return res.send({
+        username: regularUser.toJSON().username,
+        profileImageURL: regularUser.toJSON().profileImageURL,
+      });
     }
-    await User.create({
-      id: id,
-      username: username,
-      profileImageURL: profileImageURL,
-      email: email,
-    });
-    return res.send("success");
   } catch (e) {
     console.log(e);
     next(e);

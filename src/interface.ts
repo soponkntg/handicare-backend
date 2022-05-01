@@ -102,3 +102,9 @@ export interface Parking extends Accessibility {
   nearEntry: boolean;
   floor: string;
 }
+
+
+export interface UserType {
+  username: string;
+  profileImageURL: string;
+}
