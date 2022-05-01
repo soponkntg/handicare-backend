@@ -235,7 +235,7 @@ const createUser = async (req: Request, res: Response, next: NextFunction) => {
       if (user) {
         return res.send({
           username: user.toJSON().username,
-          profileImageURL: "undefined",
+          profileImageURL: null,
         });
       }
 
@@ -248,7 +248,7 @@ const createUser = async (req: Request, res: Response, next: NextFunction) => {
 
       return res.send({
         username: appleUser.toJSON().username,
-        profileImageURL: "undefined",
+        profileImageURL: null,
       });
     } else {
 
