@@ -13,7 +13,7 @@ const User = sequelize.define("user", {
   },
   profileImageURL: {
     type: Sequelize.STRING,
-    allowNull: false,
+    // allowNull: false,
   },
   loginOption: {
     type: Sequelize.STRING,

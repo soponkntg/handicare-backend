@@ -62,7 +62,7 @@ export const storeData = async () => {
             floor: row["Floor"],
             contact: row["Contact"],
             imagesURL: row["Images URL"],
-            logoURL: row["LogoURL"],
+            logoURL: row["Logo_URL"],
             remark: row["Remark"],
           };
           locationRestaurantsData.push(data);

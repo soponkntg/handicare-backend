@@ -228,51 +228,21 @@ const createUser = async (req: Request, res: Response, next: NextFunction) => {
     if (!id || !loginOption) {
       return res.send("invalid input");
     }
-
-    if (loginOption === "apple") {
-      const user = await User.findOne({ where: { id: id } });
-
-      if (user) {
-        return res.send({
-          username: user.toJSON().username,
-          profileImageURL: null,
-        });
-      }
-
-      const appleUser = await User.create({
+    let res_user: any = {};
+    let user = await User.findOne({ where: { id: id } });
+    if (!user) {
+      user = await User.create({
         id: id,
         username: username,
-        profileImageURL: "",
+        profileImageURL: profileImageURL ? profileImageURL : null,
         loginOption: loginOption,
-      });
-
-      return res.send({
-        username: appleUser.toJSON().username,
-        profileImageURL: null,
-      });
-    } else {
-
-      const user = await User.findOne({ where: { id: id } });
-
-      if (user) {
-        return res.send({
-          username: user.toJSON().username,
-          profileImageURL: user.toJSON().profileImageURL,
-        });
-      }
-      
-      const regularUser = await User.create({
-        id: id,
-        username: username,
-        profileImageURL: profileImageURL,
-        loginOption: loginOption,
-      });
-
-      return res.send({
-        username: regularUser.toJSON().username,
-        profileImageURL: regularUser.toJSON().profileImageURL,
       });
     }
+    res_user = user.toJSON();
+    return res.send({
+      username: res_user.username,
+      profileImageURL: res_user.profileImageURL,
+    });
   } catch (e) {
     console.log(e);
     next(e);
